@@ -25,9 +25,9 @@ involutions, and this repository writes `M = T R`.
 
 This module sets up a nonelegant forest representation, implements Donaghey's
 squeeze through `prim`, proves `prim (R f) = R (prim f)` (same for T) and
-classifies the orbits by a structural proofs. The remaining
+classifies the orbits by structural proofs. The remaining
 conditional obstruction is the iterated equation below, which computationally
-never returns.
+never gives forest `f` where `R f = f`.
 
 This approach is simpler than not using `prim` as without `prim` it is
 necessary to consume unary nesting and leaf runs and keep these integer
@@ -38,7 +38,7 @@ and is easy to compute.
 There is also a proof that `RTRT f = f` implies `R f = f` and `TRT f = f`. This
 speeds up compute, given that it's easy to generate R f = f forests instead of
 full Catalan enumeration. In addition to that, we can directly enumerate
-Donaghey's zigzag trees, there's very little of them.
+Donaghey's reduced trees, there's very little of them.
 
 For example, fixed orbits appear at 1, 2, 5, 14 nodes. Checking that no fixed
 orbits appear at n=42 is feasible and confirmed.
@@ -83,7 +83,8 @@ short proofs that align with recursive definition of compositions.
 It is easy to use the operators and scripts to find formulas for infinite
 families for arbitrary k. M^5 is very similar to M^2. Although very quickly no
 orbits occur at all at higher k (primes). No proof was discovered as to why
-they don't occur.
+they don't occur. For odd k there are no orbits with even node count (proof in
+repo as well).
 
 `primitive_mk_cuda` enumerates all primitive forests of a node size and checks
 the general equation `M^k f = f` without the `R`-fixed shortcut used by the
