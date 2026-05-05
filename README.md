@@ -11,8 +11,10 @@ it might be a short computational experiment.
 This Lean project formalizes the classification attempt of a fixed set where
 `RTRT f = f` or `RT f = TR f` holds for an ordered forest `f`. Instead of
 dealing with unary nesting ((((())))) or leaf runs ()()()()()(), Donaghey's
-"squeeze" is applied and fixed orbits no longer need to be parameterized by
-integers.
+"squeeze" is applied through `prim`. This is a reduced normal form, not a
+quotient by every visible repetition: it contracts unary nesting and removes
+middle leaf siblings, while horizontal repetitions of non-leaf primitive blocks
+remain part of the reduced forest.
 
 The operators used below are Knuth's conjugation `R` and transpose `T`. The
 conjugate `R` reverses forest order and recursively reverses child order inside
@@ -32,8 +34,8 @@ never gives forest `f` where `R f = f`.
 This approach is simpler than not using `prim` as without `prim` it is
 necessary to consume unary nesting and leaf runs and keep these integer
 parameters available. With the parameters, we get a composition indexed
-iterated equation which is hard to manage. With `prim` equation stays in `prim`
-and is easy to compute.
+iterated equation which is hard to manage. With `prim`, those degenerate
+parameters disappear and the equation stays inside the primitive normal form.
 
 There is also a proof that `RTRT f = f` implies `R f = f` and `TRT f = f`. This
 speeds up compute, given that it's easy to generate R f = f forests instead of
@@ -69,8 +71,10 @@ question](https://mathoverflow.net/questions/510199/two-involutions-on-ordered-t
 so it is not identical.
 
 Infinite families are composition indexed, but as node count increases, the
-composition gets more constrained, with the final families having composition
-(2,...,2) as its core.
+composition gets more constrained. The reduced picture should therefore be read
+carefully: `prim` removes unary and leaf-run bookkeeping, but a primitive
+enumerator is still enumerating reduced forests by node count, not quotienting
+them by membership in a named ABCFGJK family.
 
 Using Knuth's "bar" operator (look below), the formulas for all ABCFGJK
 families are available (or if not included, easy to discover).
@@ -88,7 +92,10 @@ repo as well).
 
 `primitive_mk_cuda` enumerates all primitive forests of a node size and checks
 the general equation `M^k f = f` without the `R`-fixed shortcut used by the
-specialized `primitive_rtrt_*` tools.
+specialized `primitive_rtrt_*` tools. Its counts are counts of primitive normal
+forms. For example, if a known family has several reduced representatives at
+larger node counts, the script reports those representatives; it does not try
+to identify or collapse them as instances of one formula.
 
 Examples:
 
@@ -168,8 +175,10 @@ but no proof found that they never become 0 for higher `n`.
 I also have raw formalization attempts in non-primitive forms that keep integer
 parameterization of infinite families and discover their structure but it's
 4k+ lines of Lean that I did not want to include in the project. Using `prim`
-allows for simpler proofs and removes integer infinities and in the case of M3
-it would also remove compositions.
+allows for simpler proofs and removes the unary-nesting and leaf-run integer
+parameters. It may also collapse much of the M3 composition bookkeeping, but
+that is separate from proving that every reduced M3 family is finite or
+unparameterized.
 
 Although, both approaches encounter the iterated equations so at least this
 increases confidence that the equation is not an artifact of the proof method.
