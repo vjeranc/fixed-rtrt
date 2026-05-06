@@ -1,4 +1,5 @@
 name = "fixed_rt"
+license = "GPL-3.0-only"
 defaultTargets = ["M2", "M3", "Parity"]
 
 [[require]]

@@ -183,6 +183,11 @@ unparameterized.
 Although, both approaches encounter the iterated equations so at least this
 increases confidence that the equation is not an artifact of the proof method.
 
+## License
+
+This project is licensed under the GNU General Public License, version 3 only.
+See the `LICENSE` file for details.
+
 ## References
 
 [1] R. Donaghey, “Automorphisms on Catalan trees and bracketings,” J. Combin. Theory Ser. B 29 (1980), no. 1, 75–90. https://doi.org/10.1016/0095-8956(80)90045-3
