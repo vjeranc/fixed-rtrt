@@ -1,43 +1,7 @@
-import M2.Orbits
+import M2.AOrbit
 
 namespace Primitive
 namespace Tree
-
-def W (f : List Tree) : List Tree := rList (tList f)
-
-def A : Nat → List Tree
-  | 0 => []
-  | n + 1 => W (A n) ++ [leaf]
-
-def hForest (f : List Tree) : List Tree := tList (rList (tList f))
-
-def NoReturn : Prop :=
-  ∀ n, rList (A n) = A n → n = 0 ∨ n = 1 ∨ n = 2 ∨ n = 4
-
-theorem rList_A_succ (n : Nat) :
-    rList (A (n + 1)) = leaf :: tList (A n) := by
-  simp [A, W, rList_append, rList_involutive, leaf]
-
-theorem hForest_eq_tList_A_succ (n : Nat) :
-    hForest [.node (A n)] = tList (A (n + 1)) := by
-  unfold hForest;
-  simp +decide [ A ];
-  congr
-
-theorem hForest_fixed_iff_A_palindrome (n : Nat) :
-    hForest [.node (A n)] = [.node (A n)] ↔ rList (A (n + 1)) = A (n + 1) := by
-  unfold hForest;
-  have h1 : tList (rList (tList [node (A n)])) = tList (A (n + 1)) := by
-    apply hForest_eq_tList_A_succ;
-  have h2 : tList (A (n + 1)) = [node (A n)] ↔ A (n + 1) = leaf :: tList (A n) := by
-    constructor <;> intro h <;> simp_all +decide;
-    cases h' : A ( n + 1 ) <;> simp_all +decide;
-    cases ‹Tree› ; simp_all +decide;
-    cases ‹List Tree› <;> simp_all +decide;
-    · rw [ ← h, tList_involutive ];
-    · cases ‹Tree› ; simp_all +decide [ tList ];
-  rw [ h1, h2, rList_A_succ ];
-  exact eq_comm
 
 theorem bookend_core_r_fixed {core : Tree}
     (hfix : PrimFixedM2 (.node [leaf, core, leaf])) :
@@ -66,14 +30,6 @@ theorem bookend_core_full_padded {core : Tree}
     | nil => simp [Prim, prim, squeezeOuter]
     | cons c cs =>
       exact Prim_core_of_Prim_bookend hp (by simp [leaf])
-
-theorem forestSize_A (n : Nat) : forestSize (A n) = n := by
-  induction n with
-  | zero => simp [A]
-  | succ n ih =>
-    simp only [A, W, forestSize_append]
-    rw [forestSize_rList, forestSize_tList, ih]
-    simp
 
 def FullPaddedCore (n : Nat) (core : Tree) : Prop :=
   r core = core ∧
