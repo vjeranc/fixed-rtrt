@@ -1,0 +1,1172 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Primitive forest R/T gallery</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #1f2933;
+      --muted: #5c6670;
+      --line: #d4dde6;
+      --panel: #f7f9fb;
+      --node: #254c6d;
+      --edge: #8594a3;
+      --accent: #8b5a2b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: white;
+    }
+    main {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 28px 24px 40px;
+    }
+    h1 {
+      margin: 0 0 10px;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+    h2 {
+      margin: 24px 0 10px;
+      font-size: 17px;
+      letter-spacing: 0;
+    }
+    p {
+      max-width: 980px;
+      margin: 0 0 10px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+    .defs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+    .def-block {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      padding: 12px;
+      border-radius: 6px;
+    }
+    .words {
+      max-width: 1060px;
+      margin: 14px 0 16px;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fbfcfd;
+    }
+    .words p {
+      max-width: none;
+      margin: 0 0 10px;
+      color: var(--ink);
+    }
+    .words ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--ink);
+      line-height: 1.45;
+    }
+    .words li + li {
+      margin-top: 8px;
+    }
+    .worked {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border: 1px solid #e1e7ed;
+      border-radius: 4px;
+      background: white;
+    }
+    pre {
+      margin: 0;
+      overflow-x: auto;
+      font: 13px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    }
+    .table-wrap {
+      margin-top: 18px;
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1120px;
+    }
+    th, td {
+      border-bottom: 1px solid var(--line);
+      border-right: 1px solid var(--line);
+      vertical-align: top;
+    }
+    thead th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: #eef3f7;
+      padding: 9px 10px;
+      font-size: 13px;
+      text-align: center;
+      white-space: nowrap;
+    }
+    tbody th {
+      width: 74px;
+      padding: 10px 8px;
+      background: #fbfcfd;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 650;
+      text-align: left;
+    }
+    tbody tr:last-child th,
+    tbody tr:last-child td {
+      border-bottom: 0;
+    }
+    th:last-child, td:last-child {
+      border-right: 0;
+    }
+    .index {
+      display: block;
+      color: var(--accent);
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+    .diagram-cell {
+      width: 20%;
+      min-width: 210px;
+      padding: 10px;
+      background: white;
+    }
+    .binary-cell {
+      min-width: 210px;
+      padding: 10px;
+      background: white;
+    }
+    svg.forest {
+      display: block;
+      width: 100%;
+      height: 132px;
+      margin: 0 auto 8px;
+    }
+    svg.binary {
+      display: block;
+      width: 100%;
+      height: 152px;
+      margin: 0 auto 8px;
+    }
+    .edge {
+      stroke: var(--edge);
+      stroke-width: 1.6;
+      stroke-linecap: round;
+    }
+    .bin-edge {
+      stroke: #9aa6b2;
+      stroke-width: 1.35;
+      stroke-linecap: round;
+    }
+    .bin-edge-left {
+      stroke: #2f7d62;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+    }
+    .bin-edge-right {
+      stroke: #b36b21;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+    }
+    .bin-edge-empty {
+      stroke: #d4dbe3;
+      stroke-width: 1.0;
+      stroke-linecap: round;
+    }
+    .node {
+      fill: white;
+      stroke: var(--node);
+      stroke-width: 1.8;
+    }
+    .bin-node {
+      fill: white;
+      stroke: #2f5d50;
+      stroke-width: 1.7;
+    }
+    .bin-empty {
+      fill: #cbd5df;
+      stroke: #8b98a5;
+      stroke-width: 1.1;
+    }
+    .labeled-node {
+      fill: white;
+    }
+    .node-label {
+      fill: var(--ink);
+      font: 9px/1 ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      text-anchor: middle;
+      pointer-events: none;
+    }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .legend-swatch {
+      display: inline-block;
+      width: 22px;
+      height: 0;
+      border-top: 3px solid currentColor;
+    }
+    .legend-left {
+      color: #2f7d62;
+    }
+    .legend-right {
+      color: #b36b21;
+    }
+    .word {
+      display: block;
+      width: 100%;
+      overflow-wrap: anywhere;
+      font-size: 11px;
+      line-height: 1.35;
+      color: #334155;
+      background: #f6f8fa;
+      border: 1px solid #e5ebf0;
+      border-radius: 4px;
+      padding: 5px 6px;
+    }
+    .meta {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.3;
+    }
+    @media print {
+      main { max-width: none; padding: 12px; }
+      .table-wrap { overflow: visible; }
+      thead th { position: static; }
+      svg.forest { height: 104px; }
+      svg.binary { height: 112px; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Primitive forest R/T gallery</h1>
+  <p>
+    Each row is one Donaghey primitive forest sampled from sizes 1, 2, 3, 4, 5, 6, 7, 8, 9, 10.
+    The drawings use the repository Dyck serialization shown below each forest:
+    a node with child forest C is written U C D, and sibling forests concatenate.
+    The composition convention is RT(F) = R(T(F)), matching scripts/primitive_mathlib.py.
+  </p>
+
+  <h2>Definitions</h2>
+  <div class="words">
+    <p>
+      Read a forest as a left-to-right list of rooted trees. In [node(C)] ++ S,
+      the first root has child forest C, and S is the list of top-level trees
+      sitting to its right.
+    </p>
+    <ul>
+      <li>
+        R is the ordinary mirror of the whole forest. It reverses the order of
+        the top-level roots, and it also reverses the child order inside every
+        root, at every depth. No node changes depth; only left and right are
+        flipped recursively.
+      </li>
+      <li>
+        T is the child-sibling swap. Split the forest into its first tree
+        node(C) and the remaining sibling forest S. After T, the transformed
+        old sibling forest T(S) becomes the child forest of the new first root,
+        and the transformed old child forest T(C) becomes the remaining
+        top-level forest. Then the same rule continues recursively.
+      </li>
+      <li>
+        Equivalently, make one new top-level root whose children are T(S).
+        Then put the forest T(C) to the right of that root. Thus old siblings
+        move down under the first root, and old children move up to become
+        siblings to the right.
+      </li>
+      <li>
+        T does not preserve the number of top-level roots. Old siblings can
+        move down and become children of the new first root, while old children
+        of the first root can move up and become top-level siblings. So a
+        forest with three top-level roots may become a forest with two, or one,
+        or more, depending on the first tree.
+      </li>
+      <li>
+        RT means do T first and then mirror with R. The column (RT)^2 means
+        apply that same RT move twice.
+      </li>
+      <li>
+        Example to keep in mind: T turns a vertical two-node chain into two
+        side-by-side leaves, and T turns those two side-by-side leaves back
+        into the vertical chain. R would only mirror left and right.
+      </li>
+    </ul>
+<pre class="worked">Concrete n=6 row:
+F    = [o(o o)  o(o)  o]       three top-level roots
+     = [node(C)] ++ S
+C    = [o  o]                  children of the first root
+S    = [o(o)  o]               the two old sibling roots
+
+T(F) = [node(T(S))] ++ T(C)
+     = one root over T(S), followed on the right by T(C)
+     = [o(o(o) o)  o(o)]       two top-level roots</pre>
+  </div>
+  <div class="defs">
+    <div class="def-block">
+<pre>Tree   ::= node(Forest)
+Forest ::= [] | [node(C)] ++ S
+leaf   := node([])</pre>
+    </div>
+    <div class="def-block">
+<pre>R([])             = []
+R([node(C)] ++ S) = R(S) ++ [node(R(C))]</pre>
+    </div>
+    <div class="def-block">
+<pre>T([])             = []
+T([node(C)] ++ S) = [node(T(S))] ++ T(C)</pre>
+    </div>
+    <div class="def-block">
+<pre>RT(F)       = R(T(F))
+(RT)^2(F)   = RT(RT(F))</pre>
+    </div>
+  </div>
+
+  <h2>Other Coordinates</h2>
+  <div class="words">
+    <p>
+      In Lukasiewicz coordinates, record every node by its number of children
+      in preorder. A leaf is 0. A path version is obtained by replacing each
+      outdegree k by the step k - 1.
+    </p>
+<pre class="worked">Forest F = [o(o o)  o(o)  o]
+L(F)     = [2, 0, 0, 1, 0, 0]</pre>
+    <p>
+      To apply T, split a nonempty degree list into the first root, its child
+      forest A, and the remaining sibling forest B:
+    </p>
+<pre class="worked">seq = [k] ++ A ++ B
+
+A encodes exactly k child trees of the first root.
+B encodes the top-level siblings to the right.
+
+T_L([])              = []
+T_L([k] ++ A ++ B)   = [roots(T_L(B))] ++ T_L(B) ++ T_L(A)</pre>
+    <p>
+      So T is still recursive in Lukasiewicz form. It is cleaner than the
+      drawing, but not trivial.
+    </p>
+    <p>
+      The coordinate where T is trivial is the first-child/next-sibling binary
+      tree:
+    </p>
+    <p>
+      In Binary(left,right), the left branch points to the first child of the
+      forest root, and the right branch points to the next top-level sibling.
+    </p>
+<pre class="worked">Forest chain:        [A(B)]      binary pointer: A -first child-> B
+Forest siblings:     [A  B]      binary pointer: A -next sibling-> B
+
+T_b swaps these two pointer kinds everywhere, so a chain becomes siblings
+and siblings become a chain.</pre>
+<pre class="worked">In the n=6 example:
+F = [A(B C)  D(E)  F]
+
+A's first child is B, so the binary picture has A -first child-> B.
+C is not a child of B in the forest. C is B's next sibling, so the binary
+picture has B -next sibling-> C. This is drawn as B's right pointer.</pre>
+<pre class="worked">Phi([])                  = empty
+Phi([node(C)] ++ S)      = Binary(Phi(C), Phi(S))
+
+T_binary(empty)          = empty
+T_binary(Binary(L, R))    = Binary(T_binary(R), T_binary(L))
+
+R_binary(empty)          = empty
+R_binary(Binary(L, R))    = cat(R_binary(R), Binary(R_binary(L), empty))</pre>
+    <p>
+      In this binary representation, T is just recursive left-right mirror.
+      The cost is that R becomes the less trivial operation: mirror the right
+      side, then graft the mirrored left side onto the right spine.
+    </p>
+    <p>
+      In the examples below, a solid circle is a binary node and a small gray
+      dot is an empty child/sibling pointer. The letters are the same nodes as
+      in the forest picture.
+    </p>
+    <div class="legend">
+      <span class="legend-item legend-left"><span class="legend-swatch"></span>first-child pointer</span>
+      <span class="legend-item legend-right"><span class="legend-swatch"></span>next-sibling pointer</span>
+    </div>
+  </div>
+
+  <h2>Binary Coordinate Examples</h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">sample</th>
+          <th scope="col">forest F</th>
+          <th scope="col">Phi(F): child/sibling pointers</th>
+          <th scope="col">T_binary(Phi(F)): mirror pointers</th>
+          <th scope="col">R_binary(Phi(F))</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr><th scope="row"><span class="index">two-node chain</span><span>UUDD</span></th><td class="diagram-cell"><svg class="forest" viewBox="0 0 62.0 116.0" role="img" aria-label="labeled forest">
+<line class="edge" x1="31.0" y1="14.0" x2="31.0" y2="58.0" />
+<circle class="node labeled-node" cx="31.0" cy="58.0" r="8.2" />
+<text class="node-label" x="31.0" y="61.5">B</text>
+<circle class="node labeled-node" cx="31.0" cy="14.0" r="8.2" />
+<text class="node-label" x="31.0" y="17.5">A</text>
+</svg><code class="word">UUDD</code><span class="meta">top-level roots: 1</span></td><td class="binary-cell"><svg class="binary" viewBox="0 0 103.6 136.0" role="img" aria-label="labeled first-child next-sibling binary tree">
+<line class="bin-edge-empty" x1="37.1" y1="50.0" x2="22.4" y2="86.0" />
+<line class="bin-edge-empty" x1="37.1" y1="50.0" x2="51.8" y2="86.0" />
+<line class="bin-edge-left" x1="59.1" y1="14.0" x2="37.1" y2="50.0" />
+<line class="bin-edge-empty" x1="59.1" y1="14.0" x2="81.2" y2="50.0" />
+<circle class="bin-empty" cx="22.4" cy="86.0" r="2.6" />
+<circle class="bin-empty" cx="51.8" cy="86.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="37.1" cy="50.0" r="8.2" />
+<text class="node-label" x="37.1" y="53.5">B</text>
+<circle class="bin-empty" cx="81.2" cy="50.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="59.1" cy="14.0" r="8.2" />
+<text class="node-label" x="59.1" y="17.5">A</text>
+</svg></td><td class="binary-cell"><svg class="binary" viewBox="0 0 103.6 136.0" role="img" aria-label="labeled first-child next-sibling binary tree">
+<line class="bin-edge-empty" x1="66.5" y1="50.0" x2="51.8" y2="86.0" />
+<line class="bin-edge-empty" x1="66.5" y1="50.0" x2="81.2" y2="86.0" />
+<line class="bin-edge-empty" x1="44.4" y1="14.0" x2="22.4" y2="50.0" />
+<line class="bin-edge-right" x1="44.4" y1="14.0" x2="66.5" y2="50.0" />
+<circle class="bin-empty" cx="22.4" cy="50.0" r="2.6" />
+<circle class="bin-empty" cx="51.8" cy="86.0" r="2.6" />
+<circle class="bin-empty" cx="81.2" cy="86.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="66.5" cy="50.0" r="8.2" />
+<text class="node-label" x="66.5" y="53.5">B</text>
+<circle class="bin-node labeled-node" cx="44.4" cy="14.0" r="8.2" />
+<text class="node-label" x="44.4" y="17.5">A</text>
+</svg></td><td class="binary-cell"><svg class="binary" viewBox="0 0 103.6 136.0" role="img" aria-label="labeled first-child next-sibling binary tree">
+<line class="bin-edge-empty" x1="37.1" y1="50.0" x2="22.4" y2="86.0" />
+<line class="bin-edge-empty" x1="37.1" y1="50.0" x2="51.8" y2="86.0" />
+<line class="bin-edge-left" x1="59.1" y1="14.0" x2="37.1" y2="50.0" />
+<line class="bin-edge-empty" x1="59.1" y1="14.0" x2="81.2" y2="50.0" />
+<circle class="bin-empty" cx="22.4" cy="86.0" r="2.6" />
+<circle class="bin-empty" cx="51.8" cy="86.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="37.1" cy="50.0" r="8.2" />
+<text class="node-label" x="37.1" y="53.5">B</text>
+<circle class="bin-empty" cx="81.2" cy="50.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="59.1" cy="14.0" r="8.2" />
+<text class="node-label" x="59.1" y="17.5">A</text>
+</svg></td></tr>
+<tr><th scope="row"><span class="index">two leaves</span><span>UDUD</span></th><td class="diagram-cell"><svg class="forest" viewBox="0 0 121.5 72.0" role="img" aria-label="labeled forest">
+<circle class="node labeled-node" cx="31.0" cy="14.0" r="8.2" />
+<text class="node-label" x="31.0" y="17.5">A</text>
+<circle class="node labeled-node" cx="90.5" cy="14.0" r="8.2" />
+<text class="node-label" x="90.5" y="17.5">B</text>
+</svg><code class="word">UDUD</code><span class="meta">top-level roots: 2</span></td><td class="binary-cell"><svg class="binary" viewBox="0 0 103.6 136.0" role="img" aria-label="labeled first-child next-sibling binary tree">
+<line class="bin-edge-empty" x1="66.5" y1="50.0" x2="51.8" y2="86.0" />
+<line class="bin-edge-empty" x1="66.5" y1="50.0" x2="81.2" y2="86.0" />
+<line class="bin-edge-empty" x1="44.4" y1="14.0" x2="22.4" y2="50.0" />
+<line class="bin-edge-right" x1="44.4" y1="14.0" x2="66.5" y2="50.0" />
+<circle class="bin-empty" cx="22.4" cy="50.0" r="2.6" />
+<circle class="bin-empty" cx="51.8" cy="86.0" r="2.6" />
+<circle class="bin-empty" cx="81.2" cy="86.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="66.5" cy="50.0" r="8.2" />
+<text class="node-label" x="66.5" y="53.5">B</text>
+<circle class="bin-node labeled-node" cx="44.4" cy="14.0" r="8.2" />
+<text class="node-label" x="44.4" y="17.5">A</text>
+</svg></td><td class="binary-cell"><svg class="binary" viewBox="0 0 103.6 136.0" role="img" aria-label="labeled first-child next-sibling binary tree">
+<line class="bin-edge-empty" x1="37.1" y1="50.0" x2="22.4" y2="86.0" />
+<line class="bin-edge-empty" x1="37.1" y1="50.0" x2="51.8" y2="86.0" />
+<line class="bin-edge-left" x1="59.1" y1="14.0" x2="37.1" y2="50.0" />
+<line class="bin-edge-empty" x1="59.1" y1="14.0" x2="81.2" y2="50.0" />
+<circle class="bin-empty" cx="22.4" cy="86.0" r="2.6" />
+<circle class="bin-empty" cx="51.8" cy="86.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="37.1" cy="50.0" r="8.2" />
+<text class="node-label" x="37.1" y="53.5">B</text>
+<circle class="bin-empty" cx="81.2" cy="50.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="59.1" cy="14.0" r="8.2" />
+<text class="node-label" x="59.1" y="17.5">A</text>
+</svg></td><td class="binary-cell"><svg class="binary" viewBox="0 0 103.6 136.0" role="img" aria-label="labeled first-child next-sibling binary tree">
+<line class="bin-edge-empty" x1="66.5" y1="50.0" x2="51.8" y2="86.0" />
+<line class="bin-edge-empty" x1="66.5" y1="50.0" x2="81.2" y2="86.0" />
+<line class="bin-edge-empty" x1="44.4" y1="14.0" x2="22.4" y2="50.0" />
+<line class="bin-edge-right" x1="44.4" y1="14.0" x2="66.5" y2="50.0" />
+<circle class="bin-empty" cx="22.4" cy="50.0" r="2.6" />
+<circle class="bin-empty" cx="51.8" cy="86.0" r="2.6" />
+<circle class="bin-empty" cx="81.2" cy="86.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="66.5" cy="50.0" r="8.2" />
+<text class="node-label" x="66.5" y="53.5">A</text>
+<circle class="bin-node labeled-node" cx="44.4" cy="14.0" r="8.2" />
+<text class="node-label" x="44.4" y="17.5">B</text>
+</svg></td></tr>
+<tr><th scope="row"><span class="index">n=6 gallery row</span><span>UUDUDDUUDDUD</span></th><td class="diagram-cell"><svg class="forest" viewBox="0 0 240.5 116.0" role="img" aria-label="labeled forest">
+<line class="edge" x1="60.8" y1="14.0" x2="31.0" y2="58.0" />
+<line class="edge" x1="60.8" y1="14.0" x2="90.5" y2="58.0" />
+<line class="edge" x1="150.0" y1="14.0" x2="150.0" y2="58.0" />
+<circle class="node labeled-node" cx="31.0" cy="58.0" r="8.2" />
+<text class="node-label" x="31.0" y="61.5">B</text>
+<circle class="node labeled-node" cx="90.5" cy="58.0" r="8.2" />
+<text class="node-label" x="90.5" y="61.5">C</text>
+<circle class="node labeled-node" cx="60.8" cy="14.0" r="8.2" />
+<text class="node-label" x="60.8" y="17.5">A</text>
+<circle class="node labeled-node" cx="150.0" cy="58.0" r="8.2" />
+<text class="node-label" x="150.0" y="61.5">E</text>
+<circle class="node labeled-node" cx="150.0" cy="14.0" r="8.2" />
+<text class="node-label" x="150.0" y="17.5">D</text>
+<circle class="node labeled-node" cx="209.5" cy="14.0" r="8.2" />
+<text class="node-label" x="209.5" y="17.5">F</text>
+</svg><code class="word">UUDUDDUUDDUD</code><span class="meta">top-level roots: 3</span></td><td class="binary-cell"><svg class="binary" viewBox="0 0 221.2 172.0" role="img" aria-label="labeled first-child next-sibling binary tree">
+<line class="bin-edge-empty" x1="66.5" y1="86.0" x2="51.8" y2="122.0" />
+<line class="bin-edge-empty" x1="66.5" y1="86.0" x2="81.2" y2="122.0" />
+<line class="bin-edge-empty" x1="44.4" y1="50.0" x2="22.4" y2="86.0" />
+<line class="bin-edge-right" x1="44.4" y1="50.0" x2="66.5" y2="86.0" />
+<line class="bin-edge-empty" x1="125.3" y1="86.0" x2="110.6" y2="122.0" />
+<line class="bin-edge-empty" x1="125.3" y1="86.0" x2="140.0" y2="122.0" />
+<line class="bin-edge-empty" x1="184.1" y1="86.0" x2="169.4" y2="122.0" />
+<line class="bin-edge-empty" x1="184.1" y1="86.0" x2="198.8" y2="122.0" />
+<line class="bin-edge-left" x1="154.7" y1="50.0" x2="125.3" y2="86.0" />
+<line class="bin-edge-right" x1="154.7" y1="50.0" x2="184.1" y2="86.0" />
+<line class="bin-edge-left" x1="99.6" y1="14.0" x2="44.4" y2="50.0" />
+<line class="bin-edge-right" x1="99.6" y1="14.0" x2="154.7" y2="50.0" />
+<circle class="bin-empty" cx="22.4" cy="86.0" r="2.6" />
+<circle class="bin-empty" cx="51.8" cy="122.0" r="2.6" />
+<circle class="bin-empty" cx="81.2" cy="122.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="66.5" cy="86.0" r="8.2" />
+<text class="node-label" x="66.5" y="89.5">C</text>
+<circle class="bin-node labeled-node" cx="44.4" cy="50.0" r="8.2" />
+<text class="node-label" x="44.4" y="53.5">B</text>
+<circle class="bin-empty" cx="110.6" cy="122.0" r="2.6" />
+<circle class="bin-empty" cx="140.0" cy="122.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="125.3" cy="86.0" r="8.2" />
+<text class="node-label" x="125.3" y="89.5">E</text>
+<circle class="bin-empty" cx="169.4" cy="122.0" r="2.6" />
+<circle class="bin-empty" cx="198.8" cy="122.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="184.1" cy="86.0" r="8.2" />
+<text class="node-label" x="184.1" y="89.5">F</text>
+<circle class="bin-node labeled-node" cx="154.7" cy="50.0" r="8.2" />
+<text class="node-label" x="154.7" y="53.5">D</text>
+<circle class="bin-node labeled-node" cx="99.6" cy="14.0" r="8.2" />
+<text class="node-label" x="99.6" y="17.5">A</text>
+</svg></td><td class="binary-cell"><svg class="binary" viewBox="0 0 221.2 172.0" role="img" aria-label="labeled first-child next-sibling binary tree">
+<line class="bin-edge-empty" x1="37.1" y1="86.0" x2="22.4" y2="122.0" />
+<line class="bin-edge-empty" x1="37.1" y1="86.0" x2="51.8" y2="122.0" />
+<line class="bin-edge-empty" x1="95.9" y1="86.0" x2="81.2" y2="122.0" />
+<line class="bin-edge-empty" x1="95.9" y1="86.0" x2="110.6" y2="122.0" />
+<line class="bin-edge-left" x1="66.5" y1="50.0" x2="37.1" y2="86.0" />
+<line class="bin-edge-right" x1="66.5" y1="50.0" x2="95.9" y2="86.0" />
+<line class="bin-edge-empty" x1="154.7" y1="86.0" x2="140.0" y2="122.0" />
+<line class="bin-edge-empty" x1="154.7" y1="86.0" x2="169.4" y2="122.0" />
+<line class="bin-edge-left" x1="176.8" y1="50.0" x2="154.7" y2="86.0" />
+<line class="bin-edge-empty" x1="176.8" y1="50.0" x2="198.8" y2="86.0" />
+<line class="bin-edge-left" x1="121.6" y1="14.0" x2="66.5" y2="50.0" />
+<line class="bin-edge-right" x1="121.6" y1="14.0" x2="176.8" y2="50.0" />
+<circle class="bin-empty" cx="22.4" cy="122.0" r="2.6" />
+<circle class="bin-empty" cx="51.8" cy="122.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="37.1" cy="86.0" r="8.2" />
+<text class="node-label" x="37.1" y="89.5">F</text>
+<circle class="bin-empty" cx="81.2" cy="122.0" r="2.6" />
+<circle class="bin-empty" cx="110.6" cy="122.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="95.9" cy="86.0" r="8.2" />
+<text class="node-label" x="95.9" y="89.5">E</text>
+<circle class="bin-node labeled-node" cx="66.5" cy="50.0" r="8.2" />
+<text class="node-label" x="66.5" y="53.5">D</text>
+<circle class="bin-empty" cx="140.0" cy="122.0" r="2.6" />
+<circle class="bin-empty" cx="169.4" cy="122.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="154.7" cy="86.0" r="8.2" />
+<text class="node-label" x="154.7" y="89.5">C</text>
+<circle class="bin-empty" cx="198.8" cy="86.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="176.8" cy="50.0" r="8.2" />
+<text class="node-label" x="176.8" y="53.5">B</text>
+<circle class="bin-node labeled-node" cx="121.6" cy="14.0" r="8.2" />
+<text class="node-label" x="121.6" y="17.5">A</text>
+</svg></td><td class="binary-cell"><svg class="binary" viewBox="0 0 221.2 244.0" role="img" aria-label="labeled first-child next-sibling binary tree">
+<line class="bin-edge-empty" x1="66.5" y1="86.0" x2="51.8" y2="122.0" />
+<line class="bin-edge-empty" x1="66.5" y1="86.0" x2="81.2" y2="122.0" />
+<line class="bin-edge-empty" x1="154.7" y1="158.0" x2="140.0" y2="194.0" />
+<line class="bin-edge-empty" x1="154.7" y1="158.0" x2="169.4" y2="194.0" />
+<line class="bin-edge-empty" x1="132.7" y1="122.0" x2="110.6" y2="158.0" />
+<line class="bin-edge-right" x1="132.7" y1="122.0" x2="154.7" y2="158.0" />
+<line class="bin-edge-left" x1="165.7" y1="86.0" x2="132.7" y2="122.0" />
+<line class="bin-edge-empty" x1="165.7" y1="86.0" x2="198.8" y2="122.0" />
+<line class="bin-edge-left" x1="116.1" y1="50.0" x2="66.5" y2="86.0" />
+<line class="bin-edge-right" x1="116.1" y1="50.0" x2="165.7" y2="86.0" />
+<line class="bin-edge-empty" x1="69.3" y1="14.0" x2="22.4" y2="50.0" />
+<line class="bin-edge-right" x1="69.3" y1="14.0" x2="116.1" y2="50.0" />
+<circle class="bin-empty" cx="22.4" cy="50.0" r="2.6" />
+<circle class="bin-empty" cx="51.8" cy="122.0" r="2.6" />
+<circle class="bin-empty" cx="81.2" cy="122.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="66.5" cy="86.0" r="8.2" />
+<text class="node-label" x="66.5" y="89.5">E</text>
+<circle class="bin-empty" cx="110.6" cy="158.0" r="2.6" />
+<circle class="bin-empty" cx="140.0" cy="194.0" r="2.6" />
+<circle class="bin-empty" cx="169.4" cy="194.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="154.7" cy="158.0" r="8.2" />
+<text class="node-label" x="154.7" y="161.5">B</text>
+<circle class="bin-node labeled-node" cx="132.7" cy="122.0" r="8.2" />
+<text class="node-label" x="132.7" y="125.5">C</text>
+<circle class="bin-empty" cx="198.8" cy="122.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="165.7" cy="86.0" r="8.2" />
+<text class="node-label" x="165.7" y="89.5">A</text>
+<circle class="bin-node labeled-node" cx="116.1" cy="50.0" r="8.2" />
+<text class="node-label" x="116.1" y="53.5">D</text>
+<circle class="bin-node labeled-node" cx="69.3" cy="14.0" r="8.2" />
+<text class="node-label" x="69.3" y="17.5">F</text>
+</svg></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Samples</h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">sample</th>
+          <th scope="col">F</th>
+          <th scope="col">R(F)</th>
+          <th scope="col">T(F)</th>
+          <th scope="col">RT(F)</th>
+          <th scope="col">(RT)^2(F)</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr><th scope="row"><span class="index">1</span><span>n=1</span></th><td class="diagram-cell"><svg class="forest" viewBox="0 0 62.0 72.0" role="img" aria-label="forest UD">
+<circle class="node" cx="31.0" cy="14.0" r="4.5" />
+</svg><code class="word">UD</code><span class="meta">top-level roots: 1</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 62.0 72.0" role="img" aria-label="forest UD">
+<circle class="node" cx="31.0" cy="14.0" r="4.5" />
+</svg><code class="word">UD</code><span class="meta">top-level roots: 1</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 62.0 72.0" role="img" aria-label="forest UD">
+<circle class="node" cx="31.0" cy="14.0" r="4.5" />
+</svg><code class="word">UD</code><span class="meta">top-level roots: 1</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 62.0 72.0" role="img" aria-label="forest UD">
+<circle class="node" cx="31.0" cy="14.0" r="4.5" />
+</svg><code class="word">UD</code><span class="meta">top-level roots: 1</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 62.0 72.0" role="img" aria-label="forest UD">
+<circle class="node" cx="31.0" cy="14.0" r="4.5" />
+</svg><code class="word">UD</code><span class="meta">top-level roots: 1</span></td></tr>
+<tr><th scope="row"><span class="index">2</span><span>n=2</span></th><td class="diagram-cell"><svg class="forest" viewBox="0 0 62.0 116.0" role="img" aria-label="forest UUDD">
+<line class="edge" x1="31.0" y1="14.0" x2="31.0" y2="58.0" />
+<circle class="node" cx="31.0" cy="58.0" r="4.5" />
+<circle class="node" cx="31.0" cy="14.0" r="4.5" />
+</svg><code class="word">UUDD</code><span class="meta">top-level roots: 1</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 62.0 116.0" role="img" aria-label="forest UUDD">
+<line class="edge" x1="31.0" y1="14.0" x2="31.0" y2="58.0" />
+<circle class="node" cx="31.0" cy="58.0" r="4.5" />
+<circle class="node" cx="31.0" cy="14.0" r="4.5" />
+</svg><code class="word">UUDD</code><span class="meta">top-level roots: 1</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 121.5 72.0" role="img" aria-label="forest UDUD">
+<circle class="node" cx="31.0" cy="14.0" r="4.5" />
+<circle class="node" cx="90.5" cy="14.0" r="4.5" />
+</svg><code class="word">UDUD</code><span class="meta">top-level roots: 2</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 121.5 72.0" role="img" aria-label="forest UDUD">
+<circle class="node" cx="31.0" cy="14.0" r="4.5" />
+<circle class="node" cx="90.5" cy="14.0" r="4.5" />
+</svg><code class="word">UDUD</code><span class="meta">top-level roots: 2</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 62.0 116.0" role="img" aria-label="forest UUDD">
+<line class="edge" x1="31.0" y1="14.0" x2="31.0" y2="58.0" />
+<circle class="node" cx="31.0" cy="58.0" r="4.5" />
+<circle class="node" cx="31.0" cy="14.0" r="4.5" />
+</svg><code class="word">UUDD</code><span class="meta">top-level roots: 1</span></td></tr>
+<tr><th scope="row"><span class="index">3</span><span>n=3</span></th><td class="diagram-cell"><svg class="forest" viewBox="0 0 121.5 116.0" role="img" aria-label="forest UUDUDD">
+<line class="edge" x1="60.8" y1="14.0" x2="31.0" y2="58.0" />
+<line class="edge" x1="60.8" y1="14.0" x2="90.5" y2="58.0" />
+<circle class="node" cx="31.0" cy="58.0" r="4.5" />
+<circle class="node" cx="90.5" cy="58.0" r="4.5" />
+<circle class="node" cx="60.8" cy="14.0" r="4.5" />
+</svg><code class="word">UUDUDD</code><span class="meta">top-level roots: 1</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 121.5 116.0" role="img" aria-label="forest UUDUDD">
+<line class="edge" x1="60.8" y1="14.0" x2="31.0" y2="58.0" />
+<line class="edge" x1="60.8" y1="14.0" x2="90.5" y2="58.0" />
+<circle class="node" cx="31.0" cy="58.0" r="4.5" />
+<circle class="node" cx="90.5" cy="58.0" r="4.5" />
+<circle class="node" cx="60.8" cy="14.0" r="4.5" />
+</svg><code class="word">UUDUDD</code><span class="meta">top-level roots: 1</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 121.5 116.0" role="img" aria-label="forest UDUUDD">
+<line class="edge" x1="90.5" y1="14.0" x2="90.5" y2="58.0" />
+<circle class="node" cx="31.0" cy="14.0" r="4.5" />
+<circle class="node" cx="90.5" cy="58.0" r="4.5" />
+<circle class="node" cx="90.5" cy="14.0" r="4.5" />
+</svg><code class="word">UDUUDD</code><span class="meta">top-level roots: 2</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 121.5 116.0" role="img" aria-label="forest UUDDUD">
+<line class="edge" x1="31.0" y1="14.0" x2="31.0" y2="58.0" />
+<circle class="node" cx="31.0" cy="58.0" r="4.5" />
+<circle class="node" cx="31.0" cy="14.0" r="4.5" />
+<circle class="node" cx="90.5" cy="14.0" r="4.5" />
+</svg><code class="word">UUDDUD</code><span class="meta">top-level roots: 2</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 121.5 116.0" role="img" aria-label="forest UDUUDD">
+<line class="edge" x1="90.5" y1="14.0" x2="90.5" y2="58.0" />
+<circle class="node" cx="31.0" cy="14.0" r="4.5" />
+<circle class="node" cx="90.5" cy="58.0" r="4.5" />
+<circle class="node" cx="90.5" cy="14.0" r="4.5" />
+</svg><code class="word">UDUUDD</code><span class="meta">top-level roots: 2</span></td></tr>
+<tr><th scope="row"><span class="index">4</span><span>n=4</span></th><td class="diagram-cell"><svg class="forest" viewBox="0 0 121.5 160.0" role="img" aria-label="forest UUDUUDDD">
+<line class="edge" x1="90.5" y1="58.0" x2="90.5" y2="102.0" />
+<line class="edge" x1="60.8" y1="14.0" x2="31.0" y2="58.0" />
+<line class="edge" x1="60.8" y1="14.0" x2="90.5" y2="58.0" />
+<circle class="node" cx="31.0" cy="58.0" r="4.5" />
+<circle class="node" cx="90.5" cy="102.0" r="4.5" />
+<circle class="node" cx="90.5" cy="58.0" r="4.5" />
+<circle class="node" cx="60.8" cy="14.0" r="4.5" />
+</svg><code class="word">UUDUUDDD</code><span class="meta">top-level roots: 1</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 121.5 160.0" role="img" aria-label="forest UUUDDUDD">
+<line class="edge" x1="31.0" y1="58.0" x2="31.0" y2="102.0" />
+<line class="edge" x1="60.8" y1="14.0" x2="31.0" y2="58.0" />
+<line class="edge" x1="60.8" y1="14.0" x2="90.5" y2="58.0" />
+<circle class="node" cx="31.0" cy="102.0" r="4.5" />
+<circle class="node" cx="31.0" cy="58.0" r="4.5" />
+<circle class="node" cx="90.5" cy="58.0" r="4.5" />
+<circle class="node" cx="60.8" cy="14.0" r="4.5" />
+</svg><code class="word">UUUDDUDD</code><span class="meta">top-level roots: 1</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 181.0 116.0" role="img" aria-label="forest UDUUDUDD">
+<line class="edge" x1="120.2" y1="14.0" x2="90.5" y2="58.0" />
+<line class="edge" x1="120.2" y1="14.0" x2="150.0" y2="58.0" />
+<circle class="node" cx="31.0" cy="14.0" r="4.5" />
+<circle class="node" cx="90.5" cy="58.0" r="4.5" />
+<circle class="node" cx="150.0" cy="58.0" r="4.5" />
+<circle class="node" cx="120.2" cy="14.0" r="4.5" />
+</svg><code class="word">UDUUDUDD</code><span class="meta">top-level roots: 2</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 181.0 116.0" role="img" aria-label="forest UUDUDDUD">
+<line class="edge" x1="60.8" y1="14.0" x2="31.0" y2="58.0" />
+<line class="edge" x1="60.8" y1="14.0" x2="90.5" y2="58.0" />
+<circle class="node" cx="31.0" cy="58.0" r="4.5" />
+<circle class="node" cx="90.5" cy="58.0" r="4.5" />
+<circle class="node" cx="60.8" cy="14.0" r="4.5" />
+<circle class="node" cx="150.0" cy="14.0" r="4.5" />
+</svg><code class="word">UUDUDDUD</code><span class="meta">top-level roots: 2</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 121.5 116.0" role="img" aria-label="forest UUDDUUDD">
+<line class="edge" x1="31.0" y1="14.0" x2="31.0" y2="58.0" />
+<line class="edge" x1="90.5" y1="14.0" x2="90.5" y2="58.0" />
+<circle class="node" cx="31.0" cy="58.0" r="4.5" />
+<circle class="node" cx="31.0" cy="14.0" r="4.5" />
+<circle class="node" cx="90.5" cy="58.0" r="4.5" />
+<circle class="node" cx="90.5" cy="14.0" r="4.5" />
+</svg><code class="word">UUDDUUDD</code><span class="meta">top-level roots: 2</span></td></tr>
+<tr><th scope="row"><span class="index">5</span><span>n=5</span></th><td class="diagram-cell"><svg class="forest" viewBox="0 0 181.0 160.0" role="img" aria-label="forest UUDUUDDUDD">
+<line class="edge" x1="90.5" y1="58.0" x2="90.5" y2="102.0" />
+<line class="edge" x1="90.5" y1="14.0" x2="31.0" y2="58.0" />
+<line class="edge" x1="90.5" y1="14.0" x2="90.5" y2="58.0" />
+<line class="edge" x1="90.5" y1="14.0" x2="150.0" y2="58.0" />
+<circle class="node" cx="31.0" cy="58.0" r="4.5" />
+<circle class="node" cx="90.5" cy="102.0" r="4.5" />
+<circle class="node" cx="90.5" cy="58.0" r="4.5" />
+<circle class="node" cx="150.0" cy="58.0" r="4.5" />
+<circle class="node" cx="90.5" cy="14.0" r="4.5" />
+</svg><code class="word">UUDUUDDUDD</code><span class="meta">top-level roots: 1</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 181.0 160.0" role="img" aria-label="forest UUDUUDDUDD">
+<line class="edge" x1="90.5" y1="58.0" x2="90.5" y2="102.0" />
+<line class="edge" x1="90.5" y1="14.0" x2="31.0" y2="58.0" />
+<line class="edge" x1="90.5" y1="14.0" x2="90.5" y2="58.0" />
+<line class="edge" x1="90.5" y1="14.0" x2="150.0" y2="58.0" />
+<circle class="node" cx="31.0" cy="58.0" r="4.5" />
+<circle class="node" cx="90.5" cy="102.0" r="4.5" />
+<circle class="node" cx="90.5" cy="58.0" r="4.5" />
+<circle class="node" cx="150.0" cy="58.0" r="4.5" />
+<circle class="node" cx="90.5" cy="14.0" r="4.5" />
+</svg><code class="word">UUDUUDDUDD</code><span class="meta">top-level roots: 1</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 181.0 160.0" role="img" aria-label="forest UDUUUDDUDD">
+<line class="edge" x1="90.5" y1="58.0" x2="90.5" y2="102.0" />
+<line class="edge" x1="120.2" y1="14.0" x2="90.5" y2="58.0" />
+<line class="edge" x1="120.2" y1="14.0" x2="150.0" y2="58.0" />
+<circle class="node" cx="31.0" cy="14.0" r="4.5" />
+<circle class="node" cx="90.5" cy="102.0" r="4.5" />
+<circle class="node" cx="90.5" cy="58.0" r="4.5" />
+<circle class="node" cx="150.0" cy="58.0" r="4.5" />
+<circle class="node" cx="120.2" cy="14.0" r="4.5" />
+</svg><code class="word">UDUUUDDUDD</code><span class="meta">top-level roots: 2</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 181.0 160.0" role="img" aria-label="forest UUDUUDDDUD">
+<line class="edge" x1="90.5" y1="58.0" x2="90.5" y2="102.0" />
+<line class="edge" x1="60.8" y1="14.0" x2="31.0" y2="58.0" />
+<line class="edge" x1="60.8" y1="14.0" x2="90.5" y2="58.0" />
+<circle class="node" cx="31.0" cy="58.0" r="4.5" />
+<circle class="node" cx="90.5" cy="102.0" r="4.5" />
+<circle class="node" cx="90.5" cy="58.0" r="4.5" />
+<circle class="node" cx="60.8" cy="14.0" r="4.5" />
+<circle class="node" cx="150.0" cy="14.0" r="4.5" />
+</svg><code class="word">UUDUUDDDUD</code><span class="meta">top-level roots: 2</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 181.0 116.0" role="img" aria-label="forest UUDUDDUUDD">
+<line class="edge" x1="60.8" y1="14.0" x2="31.0" y2="58.0" />
+<line class="edge" x1="60.8" y1="14.0" x2="90.5" y2="58.0" />
+<line class="edge" x1="150.0" y1="14.0" x2="150.0" y2="58.0" />
+<circle class="node" cx="31.0" cy="58.0" r="4.5" />
+<circle class="node" cx="90.5" cy="58.0" r="4.5" />
+<circle class="node" cx="60.8" cy="14.0" r="4.5" />
+<circle class="node" cx="150.0" cy="58.0" r="4.5" />
+<circle class="node" cx="150.0" cy="14.0" r="4.5" />
+</svg><code class="word">UUDUDDUUDD</code><span class="meta">top-level roots: 2</span></td></tr>
+<tr><th scope="row"><span class="index">6</span><span>n=6</span></th><td class="diagram-cell"><svg class="forest" viewBox="0 0 240.5 116.0" role="img" aria-label="forest UUDUDDUUDDUD">
+<line class="edge" x1="60.8" y1="14.0" x2="31.0" y2="58.0" />
+<line class="edge" x1="60.8" y1="14.0" x2="90.5" y2="58.0" />
+<line class="edge" x1="150.0" y1="14.0" x2="150.0" y2="58.0" />
+<circle class="node" cx="31.0" cy="58.0" r="4.5" />
+<circle class="node" cx="90.5" cy="58.0" r="4.5" />
+<circle class="node" cx="60.8" cy="14.0" r="4.5" />
+<circle class="node" cx="150.0" cy="58.0" r="4.5" />
+<circle class="node" cx="150.0" cy="14.0" r="4.5" />
+<circle class="node" cx="209.5" cy="14.0" r="4.5" />
+</svg><code class="word">UUDUDDUUDDUD</code><span class="meta">top-level roots: 3</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 240.5 116.0" role="img" aria-label="forest UDUUDDUUDUDD">
+<line class="edge" x1="90.5" y1="14.0" x2="90.5" y2="58.0" />
+<line class="edge" x1="179.8" y1="14.0" x2="150.0" y2="58.0" />
+<line class="edge" x1="179.8" y1="14.0" x2="209.5" y2="58.0" />
+<circle class="node" cx="31.0" cy="14.0" r="4.5" />
+<circle class="node" cx="90.5" cy="58.0" r="4.5" />
+<circle class="node" cx="90.5" cy="14.0" r="4.5" />
+<circle class="node" cx="150.0" cy="58.0" r="4.5" />
+<circle class="node" cx="209.5" cy="58.0" r="4.5" />
+<circle class="node" cx="179.8" cy="14.0" r="4.5" />
+</svg><code class="word">UDUUDDUUDUDD</code><span class="meta">top-level roots: 3</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 181.0 160.0" role="img" aria-label="forest UUUDDUDDUUDD">
+<line class="edge" x1="31.0" y1="58.0" x2="31.0" y2="102.0" />
+<line class="edge" x1="60.8" y1="14.0" x2="31.0" y2="58.0" />
+<line class="edge" x1="60.8" y1="14.0" x2="90.5" y2="58.0" />
+<line class="edge" x1="150.0" y1="14.0" x2="150.0" y2="58.0" />
+<circle class="node" cx="31.0" cy="102.0" r="4.5" />
+<circle class="node" cx="31.0" cy="58.0" r="4.5" />
+<circle class="node" cx="90.5" cy="58.0" r="4.5" />
+<circle class="node" cx="60.8" cy="14.0" r="4.5" />
+<circle class="node" cx="150.0" cy="58.0" r="4.5" />
+<circle class="node" cx="150.0" cy="14.0" r="4.5" />
+</svg><code class="word">UUUDDUDDUUDD</code><span class="meta">top-level roots: 2</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 181.0 160.0" role="img" aria-label="forest UUDDUUDUUDDD">
+<line class="edge" x1="31.0" y1="14.0" x2="31.0" y2="58.0" />
+<line class="edge" x1="150.0" y1="58.0" x2="150.0" y2="102.0" />
+<line class="edge" x1="120.2" y1="14.0" x2="90.5" y2="58.0" />
+<line class="edge" x1="120.2" y1="14.0" x2="150.0" y2="58.0" />
+<circle class="node" cx="31.0" cy="58.0" r="4.5" />
+<circle class="node" cx="31.0" cy="14.0" r="4.5" />
+<circle class="node" cx="90.5" cy="58.0" r="4.5" />
+<circle class="node" cx="150.0" cy="102.0" r="4.5" />
+<circle class="node" cx="150.0" cy="58.0" r="4.5" />
+<circle class="node" cx="120.2" cy="14.0" r="4.5" />
+</svg><code class="word">UUDDUUDUUDDD</code><span class="meta">top-level roots: 2</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 240.5 160.0" role="img" aria-label="forest UDUUUDUDDUDD">
+<line class="edge" x1="120.2" y1="58.0" x2="90.5" y2="102.0" />
+<line class="edge" x1="120.2" y1="58.0" x2="150.0" y2="102.0" />
+<line class="edge" x1="164.9" y1="14.0" x2="120.2" y2="58.0" />
+<line class="edge" x1="164.9" y1="14.0" x2="209.5" y2="58.0" />
+<circle class="node" cx="31.0" cy="14.0" r="4.5" />
+<circle class="node" cx="90.5" cy="102.0" r="4.5" />
+<circle class="node" cx="150.0" cy="102.0" r="4.5" />
+<circle class="node" cx="120.2" cy="58.0" r="4.5" />
+<circle class="node" cx="209.5" cy="58.0" r="4.5" />
+<circle class="node" cx="164.9" cy="14.0" r="4.5" />
+</svg><code class="word">UDUUUDUDDUDD</code><span class="meta">top-level roots: 2</span></td></tr>
+<tr><th scope="row"><span class="index">7</span><span>n=7</span></th><td class="diagram-cell"><svg class="forest" viewBox="0 0 240.5 160.0" role="img" aria-label="forest UUDUUDDUUDDDUD">
+<line class="edge" x1="90.5" y1="58.0" x2="90.5" y2="102.0" />
+<line class="edge" x1="150.0" y1="58.0" x2="150.0" y2="102.0" />
+<line class="edge" x1="90.5" y1="14.0" x2="31.0" y2="58.0" />
+<line class="edge" x1="90.5" y1="14.0" x2="90.5" y2="58.0" />
+<line class="edge" x1="90.5" y1="14.0" x2="150.0" y2="58.0" />
+<circle class="node" cx="31.0" cy="58.0" r="4.5" />
+<circle class="node" cx="90.5" cy="102.0" r="4.5" />
+<circle class="node" cx="90.5" cy="58.0" r="4.5" />
+<circle class="node" cx="150.0" cy="102.0" r="4.5" />
+<circle class="node" cx="150.0" cy="58.0" r="4.5" />
+<circle class="node" cx="90.5" cy="14.0" r="4.5" />
+<circle class="node" cx="209.5" cy="14.0" r="4.5" />
+</svg><code class="word">UUDUUDDUUDDDUD</code><span class="meta">top-level roots: 2</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 240.5 160.0" role="img" aria-label="forest UDUUUDDUUDDUDD">
+<line class="edge" x1="90.5" y1="58.0" x2="90.5" y2="102.0" />
+<line class="edge" x1="150.0" y1="58.0" x2="150.0" y2="102.0" />
+<line class="edge" x1="150.0" y1="14.0" x2="90.5" y2="58.0" />
+<line class="edge" x1="150.0" y1="14.0" x2="150.0" y2="58.0" />
+<line class="edge" x1="150.0" y1="14.0" x2="209.5" y2="58.0" />
+<circle class="node" cx="31.0" cy="14.0" r="4.5" />
+<circle class="node" cx="90.5" cy="102.0" r="4.5" />
+<circle class="node" cx="90.5" cy="58.0" r="4.5" />
+<circle class="node" cx="150.0" cy="102.0" r="4.5" />
+<circle class="node" cx="150.0" cy="58.0" r="4.5" />
+<circle class="node" cx="209.5" cy="58.0" r="4.5" />
+<circle class="node" cx="150.0" cy="14.0" r="4.5" />
+</svg><code class="word">UDUUUDDUUDDUDD</code><span class="meta">top-level roots: 2</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 240.5 160.0" role="img" aria-label="forest UUDDUUUDUDDUDD">
+<line class="edge" x1="31.0" y1="14.0" x2="31.0" y2="58.0" />
+<line class="edge" x1="120.2" y1="58.0" x2="90.5" y2="102.0" />
+<line class="edge" x1="120.2" y1="58.0" x2="150.0" y2="102.0" />
+<line class="edge" x1="164.9" y1="14.0" x2="120.2" y2="58.0" />
+<line class="edge" x1="164.9" y1="14.0" x2="209.5" y2="58.0" />
+<circle class="node" cx="31.0" cy="58.0" r="4.5" />
+<circle class="node" cx="31.0" cy="14.0" r="4.5" />
+<circle class="node" cx="90.5" cy="102.0" r="4.5" />
+<circle class="node" cx="150.0" cy="102.0" r="4.5" />
+<circle class="node" cx="120.2" cy="58.0" r="4.5" />
+<circle class="node" cx="209.5" cy="58.0" r="4.5" />
+<circle class="node" cx="164.9" cy="14.0" r="4.5" />
+</svg><code class="word">UUDDUUUDUDDUDD</code><span class="meta">top-level roots: 2</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 240.5 160.0" role="img" aria-label="forest UUDUUDUDDDUUDD">
+<line class="edge" x1="120.2" y1="58.0" x2="90.5" y2="102.0" />
+<line class="edge" x1="120.2" y1="58.0" x2="150.0" y2="102.0" />
+<line class="edge" x1="75.6" y1="14.0" x2="31.0" y2="58.0" />
+<line class="edge" x1="75.6" y1="14.0" x2="120.2" y2="58.0" />
+<line class="edge" x1="209.5" y1="14.0" x2="209.5" y2="58.0" />
+<circle class="node" cx="31.0" cy="58.0" r="4.5" />
+<circle class="node" cx="90.5" cy="102.0" r="4.5" />
+<circle class="node" cx="150.0" cy="102.0" r="4.5" />
+<circle class="node" cx="120.2" cy="58.0" r="4.5" />
+<circle class="node" cx="75.6" cy="14.0" r="4.5" />
+<circle class="node" cx="209.5" cy="58.0" r="4.5" />
+<circle class="node" cx="209.5" cy="14.0" r="4.5" />
+</svg><code class="word">UUDUUDUDDDUUDD</code><span class="meta">top-level roots: 2</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 240.5 160.0" role="img" aria-label="forest UUUDDUDDUUDUDD">
+<line class="edge" x1="31.0" y1="58.0" x2="31.0" y2="102.0" />
+<line class="edge" x1="60.8" y1="14.0" x2="31.0" y2="58.0" />
+<line class="edge" x1="60.8" y1="14.0" x2="90.5" y2="58.0" />
+<line class="edge" x1="179.8" y1="14.0" x2="150.0" y2="58.0" />
+<line class="edge" x1="179.8" y1="14.0" x2="209.5" y2="58.0" />
+<circle class="node" cx="31.0" cy="102.0" r="4.5" />
+<circle class="node" cx="31.0" cy="58.0" r="4.5" />
+<circle class="node" cx="90.5" cy="58.0" r="4.5" />
+<circle class="node" cx="60.8" cy="14.0" r="4.5" />
+<circle class="node" cx="150.0" cy="58.0" r="4.5" />
+<circle class="node" cx="209.5" cy="58.0" r="4.5" />
+<circle class="node" cx="179.8" cy="14.0" r="4.5" />
+</svg><code class="word">UUUDDUDDUUDUDD</code><span class="meta">top-level roots: 2</span></td></tr>
+<tr><th scope="row"><span class="index">8</span><span>n=8</span></th><td class="diagram-cell"><svg class="forest" viewBox="0 0 240.5 160.0" role="img" aria-label="forest UDUUUDDUUDDDUUDD">
+<line class="edge" x1="90.5" y1="58.0" x2="90.5" y2="102.0" />
+<line class="edge" x1="150.0" y1="58.0" x2="150.0" y2="102.0" />
+<line class="edge" x1="120.2" y1="14.0" x2="90.5" y2="58.0" />
+<line class="edge" x1="120.2" y1="14.0" x2="150.0" y2="58.0" />
+<line class="edge" x1="209.5" y1="14.0" x2="209.5" y2="58.0" />
+<circle class="node" cx="31.0" cy="14.0" r="4.5" />
+<circle class="node" cx="90.5" cy="102.0" r="4.5" />
+<circle class="node" cx="90.5" cy="58.0" r="4.5" />
+<circle class="node" cx="150.0" cy="102.0" r="4.5" />
+<circle class="node" cx="150.0" cy="58.0" r="4.5" />
+<circle class="node" cx="120.2" cy="14.0" r="4.5" />
+<circle class="node" cx="209.5" cy="58.0" r="4.5" />
+<circle class="node" cx="209.5" cy="14.0" r="4.5" />
+</svg><code class="word">UDUUUDDUUDDDUUDD</code><span class="meta">top-level roots: 3</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 240.5 160.0" role="img" aria-label="forest UUDDUUUDDUUDDDUD">
+<line class="edge" x1="31.0" y1="14.0" x2="31.0" y2="58.0" />
+<line class="edge" x1="90.5" y1="58.0" x2="90.5" y2="102.0" />
+<line class="edge" x1="150.0" y1="58.0" x2="150.0" y2="102.0" />
+<line class="edge" x1="120.2" y1="14.0" x2="90.5" y2="58.0" />
+<line class="edge" x1="120.2" y1="14.0" x2="150.0" y2="58.0" />
+<circle class="node" cx="31.0" cy="58.0" r="4.5" />
+<circle class="node" cx="31.0" cy="14.0" r="4.5" />
+<circle class="node" cx="90.5" cy="102.0" r="4.5" />
+<circle class="node" cx="90.5" cy="58.0" r="4.5" />
+<circle class="node" cx="150.0" cy="102.0" r="4.5" />
+<circle class="node" cx="150.0" cy="58.0" r="4.5" />
+<circle class="node" cx="120.2" cy="14.0" r="4.5" />
+<circle class="node" cx="209.5" cy="14.0" r="4.5" />
+</svg><code class="word">UUDDUUUDDUUDDDUD</code><span class="meta">top-level roots: 3</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 300.0 160.0" role="img" aria-label="forest UUUDUDDUUDUDDUDD">
+<line class="edge" x1="60.8" y1="58.0" x2="31.0" y2="102.0" />
+<line class="edge" x1="60.8" y1="58.0" x2="90.5" y2="102.0" />
+<line class="edge" x1="179.8" y1="58.0" x2="150.0" y2="102.0" />
+<line class="edge" x1="179.8" y1="58.0" x2="209.5" y2="102.0" />
+<line class="edge" x1="164.9" y1="14.0" x2="60.8" y2="58.0" />
+<line class="edge" x1="164.9" y1="14.0" x2="179.8" y2="58.0" />
+<line class="edge" x1="164.9" y1="14.0" x2="269.0" y2="58.0" />
+<circle class="node" cx="31.0" cy="102.0" r="4.5" />
+<circle class="node" cx="90.5" cy="102.0" r="4.5" />
+<circle class="node" cx="60.8" cy="58.0" r="4.5" />
+<circle class="node" cx="150.0" cy="102.0" r="4.5" />
+<circle class="node" cx="209.5" cy="102.0" r="4.5" />
+<circle class="node" cx="179.8" cy="58.0" r="4.5" />
+<circle class="node" cx="269.0" cy="58.0" r="4.5" />
+<circle class="node" cx="164.9" cy="14.0" r="4.5" />
+</svg><code class="word">UUUDUDDUUDUDDUDD</code><span class="meta">top-level roots: 1</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 300.0 160.0" role="img" aria-label="forest UUDUUDUDDUUDUDDD">
+<line class="edge" x1="120.2" y1="58.0" x2="90.5" y2="102.0" />
+<line class="edge" x1="120.2" y1="58.0" x2="150.0" y2="102.0" />
+<line class="edge" x1="239.2" y1="58.0" x2="209.5" y2="102.0" />
+<line class="edge" x1="239.2" y1="58.0" x2="269.0" y2="102.0" />
+<line class="edge" x1="135.1" y1="14.0" x2="31.0" y2="58.0" />
+<line class="edge" x1="135.1" y1="14.0" x2="120.2" y2="58.0" />
+<line class="edge" x1="135.1" y1="14.0" x2="239.2" y2="58.0" />
+<circle class="node" cx="31.0" cy="58.0" r="4.5" />
+<circle class="node" cx="90.5" cy="102.0" r="4.5" />
+<circle class="node" cx="150.0" cy="102.0" r="4.5" />
+<circle class="node" cx="120.2" cy="58.0" r="4.5" />
+<circle class="node" cx="209.5" cy="102.0" r="4.5" />
+<circle class="node" cx="269.0" cy="102.0" r="4.5" />
+<circle class="node" cx="239.2" cy="58.0" r="4.5" />
+<circle class="node" cx="135.1" cy="14.0" r="4.5" />
+</svg><code class="word">UUDUUDUDDUUDUDDD</code><span class="meta">top-level roots: 1</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 240.5 204.0" role="img" aria-label="forest UUUDDUUUDDUDDDUD">
+<line class="edge" x1="31.0" y1="58.0" x2="31.0" y2="102.0" />
+<line class="edge" x1="90.5" y1="102.0" x2="90.5" y2="146.0" />
+<line class="edge" x1="120.2" y1="58.0" x2="90.5" y2="102.0" />
+<line class="edge" x1="120.2" y1="58.0" x2="150.0" y2="102.0" />
+<line class="edge" x1="75.6" y1="14.0" x2="31.0" y2="58.0" />
+<line class="edge" x1="75.6" y1="14.0" x2="120.2" y2="58.0" />
+<circle class="node" cx="31.0" cy="102.0" r="4.5" />
+<circle class="node" cx="31.0" cy="58.0" r="4.5" />
+<circle class="node" cx="90.5" cy="146.0" r="4.5" />
+<circle class="node" cx="90.5" cy="102.0" r="4.5" />
+<circle class="node" cx="150.0" cy="102.0" r="4.5" />
+<circle class="node" cx="120.2" cy="58.0" r="4.5" />
+<circle class="node" cx="75.6" cy="14.0" r="4.5" />
+<circle class="node" cx="209.5" cy="14.0" r="4.5" />
+</svg><code class="word">UUUDDUUUDDUDDDUD</code><span class="meta">top-level roots: 2</span></td></tr>
+<tr><th scope="row"><span class="index">9</span><span>n=9</span></th><td class="diagram-cell"><svg class="forest" viewBox="0 0 300.0 204.0" role="img" aria-label="forest UDUUDUUUDDUUDUDDDD">
+<line class="edge" x1="150.0" y1="102.0" x2="150.0" y2="146.0" />
+<line class="edge" x1="239.2" y1="102.0" x2="209.5" y2="146.0" />
+<line class="edge" x1="239.2" y1="102.0" x2="269.0" y2="146.0" />
+<line class="edge" x1="194.6" y1="58.0" x2="150.0" y2="102.0" />
+<line class="edge" x1="194.6" y1="58.0" x2="239.2" y2="102.0" />
+<line class="edge" x1="142.6" y1="14.0" x2="90.5" y2="58.0" />
+<line class="edge" x1="142.6" y1="14.0" x2="194.6" y2="58.0" />
+<circle class="node" cx="31.0" cy="14.0" r="4.5" />
+<circle class="node" cx="90.5" cy="58.0" r="4.5" />
+<circle class="node" cx="150.0" cy="146.0" r="4.5" />
+<circle class="node" cx="150.0" cy="102.0" r="4.5" />
+<circle class="node" cx="209.5" cy="146.0" r="4.5" />
+<circle class="node" cx="269.0" cy="146.0" r="4.5" />
+<circle class="node" cx="239.2" cy="102.0" r="4.5" />
+<circle class="node" cx="194.6" cy="58.0" r="4.5" />
+<circle class="node" cx="142.6" cy="14.0" r="4.5" />
+</svg><code class="word">UDUUDUUUDDUUDUDDDD</code><span class="meta">top-level roots: 2</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 300.0 204.0" role="img" aria-label="forest UUUUDUDDUUDDDUDDUD">
+<line class="edge" x1="60.8" y1="102.0" x2="31.0" y2="146.0" />
+<line class="edge" x1="60.8" y1="102.0" x2="90.5" y2="146.0" />
+<line class="edge" x1="150.0" y1="102.0" x2="150.0" y2="146.0" />
+<line class="edge" x1="105.4" y1="58.0" x2="60.8" y2="102.0" />
+<line class="edge" x1="105.4" y1="58.0" x2="150.0" y2="102.0" />
+<line class="edge" x1="157.4" y1="14.0" x2="105.4" y2="58.0" />
+<line class="edge" x1="157.4" y1="14.0" x2="209.5" y2="58.0" />
+<circle class="node" cx="31.0" cy="146.0" r="4.5" />
+<circle class="node" cx="90.5" cy="146.0" r="4.5" />
+<circle class="node" cx="60.8" cy="102.0" r="4.5" />
+<circle class="node" cx="150.0" cy="146.0" r="4.5" />
+<circle class="node" cx="150.0" cy="102.0" r="4.5" />
+<circle class="node" cx="105.4" cy="58.0" r="4.5" />
+<circle class="node" cx="209.5" cy="58.0" r="4.5" />
+<circle class="node" cx="157.4" cy="14.0" r="4.5" />
+<circle class="node" cx="269.0" cy="14.0" r="4.5" />
+</svg><code class="word">UUUUDUDDUUDDDUDDUD</code><span class="meta">top-level roots: 2</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 300.0 248.0" role="img" aria-label="forest UUDUUDUUDUUDDDUDDD">
+<line class="edge" x1="209.5" y1="146.0" x2="209.5" y2="190.0" />
+<line class="edge" x1="179.8" y1="102.0" x2="150.0" y2="146.0" />
+<line class="edge" x1="179.8" y1="102.0" x2="209.5" y2="146.0" />
+<line class="edge" x1="179.8" y1="58.0" x2="90.5" y2="102.0" />
+<line class="edge" x1="179.8" y1="58.0" x2="179.8" y2="102.0" />
+<line class="edge" x1="179.8" y1="58.0" x2="269.0" y2="102.0" />
+<line class="edge" x1="105.4" y1="14.0" x2="31.0" y2="58.0" />
+<line class="edge" x1="105.4" y1="14.0" x2="179.8" y2="58.0" />
+<circle class="node" cx="31.0" cy="58.0" r="4.5" />
+<circle class="node" cx="90.5" cy="102.0" r="4.5" />
+<circle class="node" cx="150.0" cy="146.0" r="4.5" />
+<circle class="node" cx="209.5" cy="190.0" r="4.5" />
+<circle class="node" cx="209.5" cy="146.0" r="4.5" />
+<circle class="node" cx="179.8" cy="102.0" r="4.5" />
+<circle class="node" cx="269.0" cy="102.0" r="4.5" />
+<circle class="node" cx="179.8" cy="58.0" r="4.5" />
+<circle class="node" cx="105.4" cy="14.0" r="4.5" />
+</svg><code class="word">UUDUUDUUDUUDDDUDDD</code><span class="meta">top-level roots: 1</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 300.0 248.0" role="img" aria-label="forest UUUDUUUDDUDDUDDUDD">
+<line class="edge" x1="90.5" y1="146.0" x2="90.5" y2="190.0" />
+<line class="edge" x1="120.2" y1="102.0" x2="90.5" y2="146.0" />
+<line class="edge" x1="120.2" y1="102.0" x2="150.0" y2="146.0" />
+<line class="edge" x1="120.2" y1="58.0" x2="31.0" y2="102.0" />
+<line class="edge" x1="120.2" y1="58.0" x2="120.2" y2="102.0" />
+<line class="edge" x1="120.2" y1="58.0" x2="209.5" y2="102.0" />
+<line class="edge" x1="194.6" y1="14.0" x2="120.2" y2="58.0" />
+<line class="edge" x1="194.6" y1="14.0" x2="269.0" y2="58.0" />
+<circle class="node" cx="31.0" cy="102.0" r="4.5" />
+<circle class="node" cx="90.5" cy="190.0" r="4.5" />
+<circle class="node" cx="90.5" cy="146.0" r="4.5" />
+<circle class="node" cx="150.0" cy="146.0" r="4.5" />
+<circle class="node" cx="120.2" cy="102.0" r="4.5" />
+<circle class="node" cx="209.5" cy="102.0" r="4.5" />
+<circle class="node" cx="120.2" cy="58.0" r="4.5" />
+<circle class="node" cx="269.0" cy="58.0" r="4.5" />
+<circle class="node" cx="194.6" cy="14.0" r="4.5" />
+</svg><code class="word">UUUDUUUDDUDDUDDUDD</code><span class="meta">top-level roots: 1</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 300.0 160.0" role="img" aria-label="forest UUDUUDDUUDDDUUDDUD">
+<line class="edge" x1="90.5" y1="58.0" x2="90.5" y2="102.0" />
+<line class="edge" x1="150.0" y1="58.0" x2="150.0" y2="102.0" />
+<line class="edge" x1="90.5" y1="14.0" x2="31.0" y2="58.0" />
+<line class="edge" x1="90.5" y1="14.0" x2="90.5" y2="58.0" />
+<line class="edge" x1="90.5" y1="14.0" x2="150.0" y2="58.0" />
+<line class="edge" x1="209.5" y1="14.0" x2="209.5" y2="58.0" />
+<circle class="node" cx="31.0" cy="58.0" r="4.5" />
+<circle class="node" cx="90.5" cy="102.0" r="4.5" />
+<circle class="node" cx="90.5" cy="58.0" r="4.5" />
+<circle class="node" cx="150.0" cy="102.0" r="4.5" />
+<circle class="node" cx="150.0" cy="58.0" r="4.5" />
+<circle class="node" cx="90.5" cy="14.0" r="4.5" />
+<circle class="node" cx="209.5" cy="58.0" r="4.5" />
+<circle class="node" cx="209.5" cy="14.0" r="4.5" />
+<circle class="node" cx="269.0" cy="14.0" r="4.5" />
+</svg><code class="word">UUDUUDDUUDDDUUDDUD</code><span class="meta">top-level roots: 3</span></td></tr>
+<tr><th scope="row"><span class="index">10</span><span>n=10</span></th><td class="diagram-cell"><svg class="forest" viewBox="0 0 419.0 204.0" role="img" aria-label="forest UDUUDUUDUUDDUDDUDDUD">
+<line class="edge" x1="209.5" y1="102.0" x2="209.5" y2="146.0" />
+<line class="edge" x1="209.5" y1="58.0" x2="150.0" y2="102.0" />
+<line class="edge" x1="209.5" y1="58.0" x2="209.5" y2="102.0" />
+<line class="edge" x1="209.5" y1="58.0" x2="269.0" y2="102.0" />
+<line class="edge" x1="209.5" y1="14.0" x2="90.5" y2="58.0" />
+<line class="edge" x1="209.5" y1="14.0" x2="209.5" y2="58.0" />
+<line class="edge" x1="209.5" y1="14.0" x2="328.5" y2="58.0" />
+<circle class="node" cx="31.0" cy="14.0" r="4.5" />
+<circle class="node" cx="90.5" cy="58.0" r="4.5" />
+<circle class="node" cx="150.0" cy="102.0" r="4.5" />
+<circle class="node" cx="209.5" cy="146.0" r="4.5" />
+<circle class="node" cx="209.5" cy="102.0" r="4.5" />
+<circle class="node" cx="269.0" cy="102.0" r="4.5" />
+<circle class="node" cx="209.5" cy="58.0" r="4.5" />
+<circle class="node" cx="328.5" cy="58.0" r="4.5" />
+<circle class="node" cx="209.5" cy="14.0" r="4.5" />
+<circle class="node" cx="388.0" cy="14.0" r="4.5" />
+</svg><code class="word">UDUUDUUDUUDDUDDUDDUD</code><span class="meta">top-level roots: 3</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 419.0 204.0" role="img" aria-label="forest UDUUDUUDUUDDUDDUDDUD">
+<line class="edge" x1="209.5" y1="102.0" x2="209.5" y2="146.0" />
+<line class="edge" x1="209.5" y1="58.0" x2="150.0" y2="102.0" />
+<line class="edge" x1="209.5" y1="58.0" x2="209.5" y2="102.0" />
+<line class="edge" x1="209.5" y1="58.0" x2="269.0" y2="102.0" />
+<line class="edge" x1="209.5" y1="14.0" x2="90.5" y2="58.0" />
+<line class="edge" x1="209.5" y1="14.0" x2="209.5" y2="58.0" />
+<line class="edge" x1="209.5" y1="14.0" x2="328.5" y2="58.0" />
+<circle class="node" cx="31.0" cy="14.0" r="4.5" />
+<circle class="node" cx="90.5" cy="58.0" r="4.5" />
+<circle class="node" cx="150.0" cy="102.0" r="4.5" />
+<circle class="node" cx="209.5" cy="146.0" r="4.5" />
+<circle class="node" cx="209.5" cy="102.0" r="4.5" />
+<circle class="node" cx="269.0" cy="102.0" r="4.5" />
+<circle class="node" cx="209.5" cy="58.0" r="4.5" />
+<circle class="node" cx="328.5" cy="58.0" r="4.5" />
+<circle class="node" cx="209.5" cy="14.0" r="4.5" />
+<circle class="node" cx="388.0" cy="14.0" r="4.5" />
+</svg><code class="word">UDUUDUUDUUDDUDDUDDUD</code><span class="meta">top-level roots: 3</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 240.5 248.0" role="img" aria-label="forest UUUDDUUUDDUUUDDUDDDD">
+<line class="edge" x1="31.0" y1="58.0" x2="31.0" y2="102.0" />
+<line class="edge" x1="90.5" y1="102.0" x2="90.5" y2="146.0" />
+<line class="edge" x1="150.0" y1="146.0" x2="150.0" y2="190.0" />
+<line class="edge" x1="179.8" y1="102.0" x2="150.0" y2="146.0" />
+<line class="edge" x1="179.8" y1="102.0" x2="209.5" y2="146.0" />
+<line class="edge" x1="135.1" y1="58.0" x2="90.5" y2="102.0" />
+<line class="edge" x1="135.1" y1="58.0" x2="179.8" y2="102.0" />
+<line class="edge" x1="83.1" y1="14.0" x2="31.0" y2="58.0" />
+<line class="edge" x1="83.1" y1="14.0" x2="135.1" y2="58.0" />
+<circle class="node" cx="31.0" cy="102.0" r="4.5" />
+<circle class="node" cx="31.0" cy="58.0" r="4.5" />
+<circle class="node" cx="90.5" cy="146.0" r="4.5" />
+<circle class="node" cx="90.5" cy="102.0" r="4.5" />
+<circle class="node" cx="150.0" cy="190.0" r="4.5" />
+<circle class="node" cx="150.0" cy="146.0" r="4.5" />
+<circle class="node" cx="209.5" cy="146.0" r="4.5" />
+<circle class="node" cx="179.8" cy="102.0" r="4.5" />
+<circle class="node" cx="135.1" cy="58.0" r="4.5" />
+<circle class="node" cx="83.1" cy="14.0" r="4.5" />
+</svg><code class="word">UUUDDUUUDDUUUDDUDDDD</code><span class="meta">top-level roots: 1</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 240.5 248.0" role="img" aria-label="forest UUUUDUUDDDUUDDDUUDDD">
+<line class="edge" x1="90.5" y1="146.0" x2="90.5" y2="190.0" />
+<line class="edge" x1="60.8" y1="102.0" x2="31.0" y2="146.0" />
+<line class="edge" x1="60.8" y1="102.0" x2="90.5" y2="146.0" />
+<line class="edge" x1="150.0" y1="102.0" x2="150.0" y2="146.0" />
+<line class="edge" x1="105.4" y1="58.0" x2="60.8" y2="102.0" />
+<line class="edge" x1="105.4" y1="58.0" x2="150.0" y2="102.0" />
+<line class="edge" x1="209.5" y1="58.0" x2="209.5" y2="102.0" />
+<line class="edge" x1="157.4" y1="14.0" x2="105.4" y2="58.0" />
+<line class="edge" x1="157.4" y1="14.0" x2="209.5" y2="58.0" />
+<circle class="node" cx="31.0" cy="146.0" r="4.5" />
+<circle class="node" cx="90.5" cy="190.0" r="4.5" />
+<circle class="node" cx="90.5" cy="146.0" r="4.5" />
+<circle class="node" cx="60.8" cy="102.0" r="4.5" />
+<circle class="node" cx="150.0" cy="146.0" r="4.5" />
+<circle class="node" cx="150.0" cy="102.0" r="4.5" />
+<circle class="node" cx="105.4" cy="58.0" r="4.5" />
+<circle class="node" cx="209.5" cy="102.0" r="4.5" />
+<circle class="node" cx="209.5" cy="58.0" r="4.5" />
+<circle class="node" cx="157.4" cy="14.0" r="4.5" />
+</svg><code class="word">UUUUDUUDDDUUDDDUUDDD</code><span class="meta">top-level roots: 1</span></td><td class="diagram-cell"><svg class="forest" viewBox="0 0 419.0 116.0" role="img" aria-label="forest UUDUDDUUDUDDUUDUDDUD">
+<line class="edge" x1="60.8" y1="14.0" x2="31.0" y2="58.0" />
+<line class="edge" x1="60.8" y1="14.0" x2="90.5" y2="58.0" />
+<line class="edge" x1="179.8" y1="14.0" x2="150.0" y2="58.0" />
+<line class="edge" x1="179.8" y1="14.0" x2="209.5" y2="58.0" />
+<line class="edge" x1="298.8" y1="14.0" x2="269.0" y2="58.0" />
+<line class="edge" x1="298.8" y1="14.0" x2="328.5" y2="58.0" />
+<circle class="node" cx="31.0" cy="58.0" r="4.5" />
+<circle class="node" cx="90.5" cy="58.0" r="4.5" />
+<circle class="node" cx="60.8" cy="14.0" r="4.5" />
+<circle class="node" cx="150.0" cy="58.0" r="4.5" />
+<circle class="node" cx="209.5" cy="58.0" r="4.5" />
+<circle class="node" cx="179.8" cy="14.0" r="4.5" />
+<circle class="node" cx="269.0" cy="58.0" r="4.5" />
+<circle class="node" cx="328.5" cy="58.0" r="4.5" />
+<circle class="node" cx="298.8" cy="14.0" r="4.5" />
+<circle class="node" cx="388.0" cy="14.0" r="4.5" />
+</svg><code class="word">UUDUDDUUDUDDUUDUDDUD</code><span class="meta">top-level roots: 4</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+</body>
+</html>
