@@ -149,6 +149,23 @@
       padding: 10px;
       background: white;
     }
+    .fixed-forest-cell {
+      min-width: 320px;
+    }
+    .fixed-binary-cell {
+      min-width: 320px;
+    }
+    .fixed-word-cell {
+      min-width: 340px;
+      padding: 10px;
+      background: white;
+    }
+    .fixed-forest-cell svg.forest {
+      height: 190px;
+    }
+    .fixed-binary-cell svg.binary {
+      height: 210px;
+    }
     svg.forest {
       display: block;
       width: 100%;
@@ -246,6 +263,32 @@
       border: 1px solid #e5ebf0;
       border-radius: 4px;
       padding: 5px 6px;
+    }
+    .coord-list {
+      display: grid;
+      grid-template-columns: max-content minmax(0, 1fr);
+      gap: 6px 10px;
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    .coord-list dt {
+      color: var(--muted);
+      font-weight: 650;
+    }
+    .coord-list dd {
+      min-width: 0;
+      margin: 0;
+    }
+    .coord-list code {
+      display: block;
+      overflow-wrap: anywhere;
+      padding: 4px 5px;
+      border: 1px solid #e5ebf0;
+      border-radius: 4px;
+      background: #f6f8fa;
+      color: #334155;
+      font: 11px/1.35 ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
     }
     .meta {
       display: block;
@@ -625,6 +668,388 @@ R_binary(Binary(L, R))    = cat(R_binary(R), Binary(R_binary(L), empty))</pre>
 <circle class="bin-node labeled-node" cx="69.3" cy="14.0" r="8.2" />
 <text class="node-label" x="69.3" y="17.5">F</text>
 </svg></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>RTRT Fixed Primitive Forests</h2>
+  <p>
+    These rows are the primitive forests fixed by (RT)^2 in the known support
+    sizes 1, 2, 5, 14. The binary word is
+    the preorder node/null serialization of the first-child/next-sibling binary
+    tree, with 1 for a node and 0 for an empty pointer.
+  </p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">fixed row</th>
+          <th scope="col">ordered forest</th>
+          <th scope="col">child/sibling binary tree</th>
+          <th scope="col">binary word and Lukasiewicz view</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr><th scope="row"><span class="index">n=1</span><span>fixed 1/1</span></th><td class="diagram-cell fixed-forest-cell"><svg class="forest" viewBox="0 0 62.0 72.0" role="img" aria-label="labeled forest">
+<circle class="node labeled-node" cx="31.0" cy="14.0" r="8.2" />
+<text class="node-label" x="31.0" y="17.5">A</text>
+</svg><code class="word">UD</code><span class="meta">top-level roots: 1</span></td><td class="binary-cell fixed-binary-cell"><svg class="binary" viewBox="0 0 74.2 100.0" role="img" aria-label="labeled first-child next-sibling binary tree">
+<line class="bin-edge-empty" x1="37.1" y1="14.0" x2="22.4" y2="50.0" />
+<line class="bin-edge-empty" x1="37.1" y1="14.0" x2="51.8" y2="50.0" />
+<circle class="bin-empty" cx="22.4" cy="50.0" r="2.6" />
+<circle class="bin-empty" cx="51.8" cy="50.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="37.1" cy="14.0" r="8.2" />
+<text class="node-label" x="37.1" y="17.5">A</text>
+</svg><span class="meta">letters match the ordered forest</span></td><td class="fixed-word-cell"><dl class="coord-list"><dt>Dyck word</dt><dd><code>UD</code></dd><dt>binary node/null word</dt><dd><code>100</code></dd><dt>Lukasiewicz degrees</dt><dd><code>[0]</code></dd><dt>Lukasiewicz steps</dt><dd><code>[-1]</code></dd></dl><span class="meta">sum of steps: -1</span></td></tr>
+<tr><th scope="row"><span class="index">n=2</span><span>fixed 1/2</span></th><td class="diagram-cell fixed-forest-cell"><svg class="forest" viewBox="0 0 62.0 116.0" role="img" aria-label="labeled forest">
+<line class="edge" x1="31.0" y1="14.0" x2="31.0" y2="58.0" />
+<circle class="node labeled-node" cx="31.0" cy="58.0" r="8.2" />
+<text class="node-label" x="31.0" y="61.5">B</text>
+<circle class="node labeled-node" cx="31.0" cy="14.0" r="8.2" />
+<text class="node-label" x="31.0" y="17.5">A</text>
+</svg><code class="word">UUDD</code><span class="meta">top-level roots: 1</span></td><td class="binary-cell fixed-binary-cell"><svg class="binary" viewBox="0 0 103.6 136.0" role="img" aria-label="labeled first-child next-sibling binary tree">
+<line class="bin-edge-empty" x1="37.1" y1="50.0" x2="22.4" y2="86.0" />
+<line class="bin-edge-empty" x1="37.1" y1="50.0" x2="51.8" y2="86.0" />
+<line class="bin-edge-left" x1="59.1" y1="14.0" x2="37.1" y2="50.0" />
+<line class="bin-edge-empty" x1="59.1" y1="14.0" x2="81.2" y2="50.0" />
+<circle class="bin-empty" cx="22.4" cy="86.0" r="2.6" />
+<circle class="bin-empty" cx="51.8" cy="86.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="37.1" cy="50.0" r="8.2" />
+<text class="node-label" x="37.1" y="53.5">B</text>
+<circle class="bin-empty" cx="81.2" cy="50.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="59.1" cy="14.0" r="8.2" />
+<text class="node-label" x="59.1" y="17.5">A</text>
+</svg><span class="meta">letters match the ordered forest</span></td><td class="fixed-word-cell"><dl class="coord-list"><dt>Dyck word</dt><dd><code>UUDD</code></dd><dt>binary node/null word</dt><dd><code>11000</code></dd><dt>Lukasiewicz degrees</dt><dd><code>[1, 0]</code></dd><dt>Lukasiewicz steps</dt><dd><code>[0, -1]</code></dd></dl><span class="meta">sum of steps: -1</span></td></tr>
+<tr><th scope="row"><span class="index">n=2</span><span>fixed 2/2</span></th><td class="diagram-cell fixed-forest-cell"><svg class="forest" viewBox="0 0 121.5 72.0" role="img" aria-label="labeled forest">
+<circle class="node labeled-node" cx="31.0" cy="14.0" r="8.2" />
+<text class="node-label" x="31.0" y="17.5">A</text>
+<circle class="node labeled-node" cx="90.5" cy="14.0" r="8.2" />
+<text class="node-label" x="90.5" y="17.5">B</text>
+</svg><code class="word">UDUD</code><span class="meta">top-level roots: 2</span></td><td class="binary-cell fixed-binary-cell"><svg class="binary" viewBox="0 0 103.6 136.0" role="img" aria-label="labeled first-child next-sibling binary tree">
+<line class="bin-edge-empty" x1="66.5" y1="50.0" x2="51.8" y2="86.0" />
+<line class="bin-edge-empty" x1="66.5" y1="50.0" x2="81.2" y2="86.0" />
+<line class="bin-edge-empty" x1="44.4" y1="14.0" x2="22.4" y2="50.0" />
+<line class="bin-edge-right" x1="44.4" y1="14.0" x2="66.5" y2="50.0" />
+<circle class="bin-empty" cx="22.4" cy="50.0" r="2.6" />
+<circle class="bin-empty" cx="51.8" cy="86.0" r="2.6" />
+<circle class="bin-empty" cx="81.2" cy="86.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="66.5" cy="50.0" r="8.2" />
+<text class="node-label" x="66.5" y="53.5">B</text>
+<circle class="bin-node labeled-node" cx="44.4" cy="14.0" r="8.2" />
+<text class="node-label" x="44.4" y="17.5">A</text>
+</svg><span class="meta">letters match the ordered forest</span></td><td class="fixed-word-cell"><dl class="coord-list"><dt>Dyck word</dt><dd><code>UDUD</code></dd><dt>binary node/null word</dt><dd><code>10100</code></dd><dt>Lukasiewicz degrees</dt><dd><code>[0, 0]</code></dd><dt>Lukasiewicz steps</dt><dd><code>[-1, -1]</code></dd></dl><span class="meta">sum of steps: -2</span></td></tr>
+<tr><th scope="row"><span class="index">n=5</span><span>fixed 1/2</span></th><td class="diagram-cell fixed-forest-cell"><svg class="forest" viewBox="0 0 121.5 160.0" role="img" aria-label="labeled forest">
+<line class="edge" x1="31.0" y1="58.0" x2="31.0" y2="102.0" />
+<line class="edge" x1="90.5" y1="58.0" x2="90.5" y2="102.0" />
+<line class="edge" x1="60.8" y1="14.0" x2="31.0" y2="58.0" />
+<line class="edge" x1="60.8" y1="14.0" x2="90.5" y2="58.0" />
+<circle class="node labeled-node" cx="31.0" cy="102.0" r="8.2" />
+<text class="node-label" x="31.0" y="105.5">C</text>
+<circle class="node labeled-node" cx="31.0" cy="58.0" r="8.2" />
+<text class="node-label" x="31.0" y="61.5">B</text>
+<circle class="node labeled-node" cx="90.5" cy="102.0" r="8.2" />
+<text class="node-label" x="90.5" y="105.5">E</text>
+<circle class="node labeled-node" cx="90.5" cy="58.0" r="8.2" />
+<text class="node-label" x="90.5" y="61.5">D</text>
+<circle class="node labeled-node" cx="60.8" cy="14.0" r="8.2" />
+<text class="node-label" x="60.8" y="17.5">A</text>
+</svg><code class="word">UUUDDUUDDD</code><span class="meta">top-level roots: 1</span></td><td class="binary-cell fixed-binary-cell"><svg class="binary" viewBox="0 0 191.8 208.0" role="img" aria-label="labeled first-child next-sibling binary tree">
+<line class="bin-edge-empty" x1="37.1" y1="86.0" x2="22.4" y2="122.0" />
+<line class="bin-edge-empty" x1="37.1" y1="86.0" x2="51.8" y2="122.0" />
+<line class="bin-edge-empty" x1="95.9" y1="122.0" x2="81.2" y2="158.0" />
+<line class="bin-edge-empty" x1="95.9" y1="122.0" x2="110.6" y2="158.0" />
+<line class="bin-edge-left" x1="118.0" y1="86.0" x2="95.9" y2="122.0" />
+<line class="bin-edge-empty" x1="118.0" y1="86.0" x2="140.0" y2="122.0" />
+<line class="bin-edge-left" x1="77.5" y1="50.0" x2="37.1" y2="86.0" />
+<line class="bin-edge-right" x1="77.5" y1="50.0" x2="118.0" y2="86.0" />
+<line class="bin-edge-left" x1="123.5" y1="14.0" x2="77.5" y2="50.0" />
+<line class="bin-edge-empty" x1="123.5" y1="14.0" x2="169.4" y2="50.0" />
+<circle class="bin-empty" cx="22.4" cy="122.0" r="2.6" />
+<circle class="bin-empty" cx="51.8" cy="122.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="37.1" cy="86.0" r="8.2" />
+<text class="node-label" x="37.1" y="89.5">C</text>
+<circle class="bin-empty" cx="81.2" cy="158.0" r="2.6" />
+<circle class="bin-empty" cx="110.6" cy="158.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="95.9" cy="122.0" r="8.2" />
+<text class="node-label" x="95.9" y="125.5">E</text>
+<circle class="bin-empty" cx="140.0" cy="122.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="118.0" cy="86.0" r="8.2" />
+<text class="node-label" x="118.0" y="89.5">D</text>
+<circle class="bin-node labeled-node" cx="77.5" cy="50.0" r="8.2" />
+<text class="node-label" x="77.5" y="53.5">B</text>
+<circle class="bin-empty" cx="169.4" cy="50.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="123.5" cy="14.0" r="8.2" />
+<text class="node-label" x="123.5" y="17.5">A</text>
+</svg><span class="meta">letters match the ordered forest</span></td><td class="fixed-word-cell"><dl class="coord-list"><dt>Dyck word</dt><dd><code>UUUDDUUDDD</code></dd><dt>binary node/null word</dt><dd><code>11100110000</code></dd><dt>Lukasiewicz degrees</dt><dd><code>[2, 1, 0, 1, 0]</code></dd><dt>Lukasiewicz steps</dt><dd><code>[1, 0, -1, 0, -1]</code></dd></dl><span class="meta">sum of steps: -1</span></td></tr>
+<tr><th scope="row"><span class="index">n=5</span><span>fixed 2/2</span></th><td class="diagram-cell fixed-forest-cell"><svg class="forest" viewBox="0 0 240.5 116.0" role="img" aria-label="labeled forest">
+<line class="edge" x1="120.2" y1="14.0" x2="90.5" y2="58.0" />
+<line class="edge" x1="120.2" y1="14.0" x2="150.0" y2="58.0" />
+<circle class="node labeled-node" cx="31.0" cy="14.0" r="8.2" />
+<text class="node-label" x="31.0" y="17.5">A</text>
+<circle class="node labeled-node" cx="90.5" cy="58.0" r="8.2" />
+<text class="node-label" x="90.5" y="61.5">C</text>
+<circle class="node labeled-node" cx="150.0" cy="58.0" r="8.2" />
+<text class="node-label" x="150.0" y="61.5">D</text>
+<circle class="node labeled-node" cx="120.2" cy="14.0" r="8.2" />
+<text class="node-label" x="120.2" y="17.5">B</text>
+<circle class="node labeled-node" cx="209.5" cy="14.0" r="8.2" />
+<text class="node-label" x="209.5" y="17.5">E</text>
+</svg><code class="word">UDUUDUDDUD</code><span class="meta">top-level roots: 3</span></td><td class="binary-cell fixed-binary-cell"><svg class="binary" viewBox="0 0 191.8 208.0" role="img" aria-label="labeled first-child next-sibling binary tree">
+<line class="bin-edge-empty" x1="95.9" y1="122.0" x2="81.2" y2="158.0" />
+<line class="bin-edge-empty" x1="95.9" y1="122.0" x2="110.6" y2="158.0" />
+<line class="bin-edge-empty" x1="73.9" y1="86.0" x2="51.8" y2="122.0" />
+<line class="bin-edge-right" x1="73.9" y1="86.0" x2="95.9" y2="122.0" />
+<line class="bin-edge-empty" x1="154.7" y1="86.0" x2="140.0" y2="122.0" />
+<line class="bin-edge-empty" x1="154.7" y1="86.0" x2="169.4" y2="122.0" />
+<line class="bin-edge-left" x1="114.3" y1="50.0" x2="73.9" y2="86.0" />
+<line class="bin-edge-right" x1="114.3" y1="50.0" x2="154.7" y2="86.0" />
+<line class="bin-edge-empty" x1="68.3" y1="14.0" x2="22.4" y2="50.0" />
+<line class="bin-edge-right" x1="68.3" y1="14.0" x2="114.3" y2="50.0" />
+<circle class="bin-empty" cx="22.4" cy="50.0" r="2.6" />
+<circle class="bin-empty" cx="51.8" cy="122.0" r="2.6" />
+<circle class="bin-empty" cx="81.2" cy="158.0" r="2.6" />
+<circle class="bin-empty" cx="110.6" cy="158.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="95.9" cy="122.0" r="8.2" />
+<text class="node-label" x="95.9" y="125.5">D</text>
+<circle class="bin-node labeled-node" cx="73.9" cy="86.0" r="8.2" />
+<text class="node-label" x="73.9" y="89.5">C</text>
+<circle class="bin-empty" cx="140.0" cy="122.0" r="2.6" />
+<circle class="bin-empty" cx="169.4" cy="122.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="154.7" cy="86.0" r="8.2" />
+<text class="node-label" x="154.7" y="89.5">E</text>
+<circle class="bin-node labeled-node" cx="114.3" cy="50.0" r="8.2" />
+<text class="node-label" x="114.3" y="53.5">B</text>
+<circle class="bin-node labeled-node" cx="68.3" cy="14.0" r="8.2" />
+<text class="node-label" x="68.3" y="17.5">A</text>
+</svg><span class="meta">letters match the ordered forest</span></td><td class="fixed-word-cell"><dl class="coord-list"><dt>Dyck word</dt><dd><code>UDUUDUDDUD</code></dd><dt>binary node/null word</dt><dd><code>10110100100</code></dd><dt>Lukasiewicz degrees</dt><dd><code>[0, 2, 0, 0, 0]</code></dd><dt>Lukasiewicz steps</dt><dd><code>[-1, 1, -1, -1, -1]</code></dd></dl><span class="meta">sum of steps: -3</span></td></tr>
+<tr><th scope="row"><span class="index">n=14</span><span>fixed 1/2</span></th><td class="diagram-cell fixed-forest-cell"><svg class="forest" viewBox="0 0 359.5 248.0" role="img" aria-label="labeled forest">
+<line class="edge" x1="31.0" y1="58.0" x2="31.0" y2="102.0" />
+<line class="edge" x1="150.0" y1="146.0" x2="150.0" y2="190.0" />
+<line class="edge" x1="120.2" y1="102.0" x2="90.5" y2="146.0" />
+<line class="edge" x1="120.2" y1="102.0" x2="150.0" y2="146.0" />
+<line class="edge" x1="209.5" y1="146.0" x2="209.5" y2="190.0" />
+<line class="edge" x1="239.2" y1="102.0" x2="209.5" y2="146.0" />
+<line class="edge" x1="239.2" y1="102.0" x2="269.0" y2="146.0" />
+<line class="edge" x1="179.8" y1="58.0" x2="120.2" y2="102.0" />
+<line class="edge" x1="179.8" y1="58.0" x2="239.2" y2="102.0" />
+<line class="edge" x1="328.5" y1="58.0" x2="328.5" y2="102.0" />
+<line class="edge" x1="179.8" y1="14.0" x2="31.0" y2="58.0" />
+<line class="edge" x1="179.8" y1="14.0" x2="179.8" y2="58.0" />
+<line class="edge" x1="179.8" y1="14.0" x2="328.5" y2="58.0" />
+<circle class="node labeled-node" cx="31.0" cy="102.0" r="8.2" />
+<text class="node-label" x="31.0" y="105.5">C</text>
+<circle class="node labeled-node" cx="31.0" cy="58.0" r="8.2" />
+<text class="node-label" x="31.0" y="61.5">B</text>
+<circle class="node labeled-node" cx="90.5" cy="146.0" r="8.2" />
+<text class="node-label" x="90.5" y="149.5">F</text>
+<circle class="node labeled-node" cx="150.0" cy="190.0" r="8.2" />
+<text class="node-label" x="150.0" y="193.5">H</text>
+<circle class="node labeled-node" cx="150.0" cy="146.0" r="8.2" />
+<text class="node-label" x="150.0" y="149.5">G</text>
+<circle class="node labeled-node" cx="120.2" cy="102.0" r="8.2" />
+<text class="node-label" x="120.2" y="105.5">E</text>
+<circle class="node labeled-node" cx="209.5" cy="190.0" r="8.2" />
+<text class="node-label" x="209.5" y="193.5">K</text>
+<circle class="node labeled-node" cx="209.5" cy="146.0" r="8.2" />
+<text class="node-label" x="209.5" y="149.5">J</text>
+<circle class="node labeled-node" cx="269.0" cy="146.0" r="8.2" />
+<text class="node-label" x="269.0" y="149.5">L</text>
+<circle class="node labeled-node" cx="239.2" cy="102.0" r="8.2" />
+<text class="node-label" x="239.2" y="105.5">I</text>
+<circle class="node labeled-node" cx="179.8" cy="58.0" r="8.2" />
+<text class="node-label" x="179.8" y="61.5">D</text>
+<circle class="node labeled-node" cx="328.5" cy="102.0" r="8.2" />
+<text class="node-label" x="328.5" y="105.5">N</text>
+<circle class="node labeled-node" cx="328.5" cy="58.0" r="8.2" />
+<text class="node-label" x="328.5" y="61.5">M</text>
+<circle class="node labeled-node" cx="179.8" cy="14.0" r="8.2" />
+<text class="node-label" x="179.8" y="17.5">A</text>
+</svg><code class="word">UUUDDUUUDUUDDDUUUDDUDDDUUDDD</code><span class="meta">top-level roots: 1</span></td><td class="binary-cell fixed-binary-cell"><svg class="binary" viewBox="0 0 456.4 316.0" role="img" aria-label="labeled first-child next-sibling binary tree">
+<line class="bin-edge-empty" x1="37.1" y1="86.0" x2="22.4" y2="122.0" />
+<line class="bin-edge-empty" x1="37.1" y1="86.0" x2="51.8" y2="122.0" />
+<line class="bin-edge-empty" x1="125.3" y1="230.0" x2="110.6" y2="266.0" />
+<line class="bin-edge-empty" x1="125.3" y1="230.0" x2="140.0" y2="266.0" />
+<line class="bin-edge-left" x1="147.3" y1="194.0" x2="125.3" y2="230.0" />
+<line class="bin-edge-empty" x1="147.3" y1="194.0" x2="169.4" y2="230.0" />
+<line class="bin-edge-empty" x1="114.3" y1="158.0" x2="81.2" y2="194.0" />
+<line class="bin-edge-right" x1="114.3" y1="158.0" x2="147.3" y2="194.0" />
+<line class="bin-edge-empty" x1="213.5" y1="230.0" x2="198.8" y2="266.0" />
+<line class="bin-edge-empty" x1="213.5" y1="230.0" x2="228.2" y2="266.0" />
+<line class="bin-edge-empty" x1="272.3" y1="230.0" x2="257.6" y2="266.0" />
+<line class="bin-edge-empty" x1="272.3" y1="230.0" x2="287.0" y2="266.0" />
+<line class="bin-edge-left" x1="242.9" y1="194.0" x2="213.5" y2="230.0" />
+<line class="bin-edge-right" x1="242.9" y1="194.0" x2="272.3" y2="230.0" />
+<line class="bin-edge-left" x1="279.7" y1="158.0" x2="242.9" y2="194.0" />
+<line class="bin-edge-empty" x1="279.7" y1="158.0" x2="316.4" y2="194.0" />
+<line class="bin-edge-left" x1="197.0" y1="122.0" x2="114.3" y2="158.0" />
+<line class="bin-edge-right" x1="197.0" y1="122.0" x2="279.7" y2="158.0" />
+<line class="bin-edge-empty" x1="360.5" y1="158.0" x2="345.8" y2="194.0" />
+<line class="bin-edge-empty" x1="360.5" y1="158.0" x2="375.2" y2="194.0" />
+<line class="bin-edge-left" x1="382.6" y1="122.0" x2="360.5" y2="158.0" />
+<line class="bin-edge-empty" x1="382.6" y1="122.0" x2="404.6" y2="158.0" />
+<line class="bin-edge-left" x1="289.8" y1="86.0" x2="197.0" y2="122.0" />
+<line class="bin-edge-right" x1="289.8" y1="86.0" x2="382.6" y2="122.0" />
+<line class="bin-edge-left" x1="163.4" y1="50.0" x2="37.1" y2="86.0" />
+<line class="bin-edge-right" x1="163.4" y1="50.0" x2="289.8" y2="86.0" />
+<line class="bin-edge-left" x1="298.7" y1="14.0" x2="163.4" y2="50.0" />
+<line class="bin-edge-empty" x1="298.7" y1="14.0" x2="434.0" y2="50.0" />
+<circle class="bin-empty" cx="22.4" cy="122.0" r="2.6" />
+<circle class="bin-empty" cx="51.8" cy="122.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="37.1" cy="86.0" r="8.2" />
+<text class="node-label" x="37.1" y="89.5">C</text>
+<circle class="bin-empty" cx="81.2" cy="194.0" r="2.6" />
+<circle class="bin-empty" cx="110.6" cy="266.0" r="2.6" />
+<circle class="bin-empty" cx="140.0" cy="266.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="125.3" cy="230.0" r="8.2" />
+<text class="node-label" x="125.3" y="233.5">H</text>
+<circle class="bin-empty" cx="169.4" cy="230.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="147.3" cy="194.0" r="8.2" />
+<text class="node-label" x="147.3" y="197.5">G</text>
+<circle class="bin-node labeled-node" cx="114.3" cy="158.0" r="8.2" />
+<text class="node-label" x="114.3" y="161.5">F</text>
+<circle class="bin-empty" cx="198.8" cy="266.0" r="2.6" />
+<circle class="bin-empty" cx="228.2" cy="266.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="213.5" cy="230.0" r="8.2" />
+<text class="node-label" x="213.5" y="233.5">K</text>
+<circle class="bin-empty" cx="257.6" cy="266.0" r="2.6" />
+<circle class="bin-empty" cx="287.0" cy="266.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="272.3" cy="230.0" r="8.2" />
+<text class="node-label" x="272.3" y="233.5">L</text>
+<circle class="bin-node labeled-node" cx="242.9" cy="194.0" r="8.2" />
+<text class="node-label" x="242.9" y="197.5">J</text>
+<circle class="bin-empty" cx="316.4" cy="194.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="279.7" cy="158.0" r="8.2" />
+<text class="node-label" x="279.7" y="161.5">I</text>
+<circle class="bin-node labeled-node" cx="197.0" cy="122.0" r="8.2" />
+<text class="node-label" x="197.0" y="125.5">E</text>
+<circle class="bin-empty" cx="345.8" cy="194.0" r="2.6" />
+<circle class="bin-empty" cx="375.2" cy="194.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="360.5" cy="158.0" r="8.2" />
+<text class="node-label" x="360.5" y="161.5">N</text>
+<circle class="bin-empty" cx="404.6" cy="158.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="382.6" cy="122.0" r="8.2" />
+<text class="node-label" x="382.6" y="125.5">M</text>
+<circle class="bin-node labeled-node" cx="289.8" cy="86.0" r="8.2" />
+<text class="node-label" x="289.8" y="89.5">D</text>
+<circle class="bin-node labeled-node" cx="163.4" cy="50.0" r="8.2" />
+<text class="node-label" x="163.4" y="53.5">B</text>
+<circle class="bin-empty" cx="434.0" cy="50.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="298.7" cy="14.0" r="8.2" />
+<text class="node-label" x="298.7" y="17.5">A</text>
+</svg><span class="meta">letters match the ordered forest</span></td><td class="fixed-word-cell"><dl class="coord-list"><dt>Dyck word</dt><dd><code>UUUDDUUUDUUDDDUUUDDUDDDUUDDD</code></dd><dt>binary node/null word</dt><dd><code>11100111011000111001000110000</code></dd><dt>Lukasiewicz degrees</dt><dd><code>[3, 1, 0, 2, 2, 0, 1, 0, 2, 1, 0, 0, 1, 0]</code></dd><dt>Lukasiewicz steps</dt><dd><code>[2, 0, -1, 1, 1, -1, 0, -1, 1, 0, -1, -1, 0, -1]</code></dd></dl><span class="meta">sum of steps: -1</span></td></tr>
+<tr><th scope="row"><span class="index">n=14</span><span>fixed 2/2</span></th><td class="diagram-cell fixed-forest-cell"><svg class="forest" viewBox="0 0 538.0 204.0" role="img" aria-label="labeled forest">
+<line class="edge" x1="120.2" y1="58.0" x2="90.5" y2="102.0" />
+<line class="edge" x1="120.2" y1="58.0" x2="150.0" y2="102.0" />
+<line class="edge" x1="269.0" y1="102.0" x2="269.0" y2="146.0" />
+<line class="edge" x1="269.0" y1="58.0" x2="209.5" y2="102.0" />
+<line class="edge" x1="269.0" y1="58.0" x2="269.0" y2="102.0" />
+<line class="edge" x1="269.0" y1="58.0" x2="328.5" y2="102.0" />
+<line class="edge" x1="417.8" y1="58.0" x2="388.0" y2="102.0" />
+<line class="edge" x1="417.8" y1="58.0" x2="447.5" y2="102.0" />
+<line class="edge" x1="269.0" y1="14.0" x2="120.2" y2="58.0" />
+<line class="edge" x1="269.0" y1="14.0" x2="269.0" y2="58.0" />
+<line class="edge" x1="269.0" y1="14.0" x2="417.8" y2="58.0" />
+<circle class="node labeled-node" cx="31.0" cy="14.0" r="8.2" />
+<text class="node-label" x="31.0" y="17.5">A</text>
+<circle class="node labeled-node" cx="90.5" cy="102.0" r="8.2" />
+<text class="node-label" x="90.5" y="105.5">D</text>
+<circle class="node labeled-node" cx="150.0" cy="102.0" r="8.2" />
+<text class="node-label" x="150.0" y="105.5">E</text>
+<circle class="node labeled-node" cx="120.2" cy="58.0" r="8.2" />
+<text class="node-label" x="120.2" y="61.5">C</text>
+<circle class="node labeled-node" cx="209.5" cy="102.0" r="8.2" />
+<text class="node-label" x="209.5" y="105.5">G</text>
+<circle class="node labeled-node" cx="269.0" cy="146.0" r="8.2" />
+<text class="node-label" x="269.0" y="149.5">I</text>
+<circle class="node labeled-node" cx="269.0" cy="102.0" r="8.2" />
+<text class="node-label" x="269.0" y="105.5">H</text>
+<circle class="node labeled-node" cx="328.5" cy="102.0" r="8.2" />
+<text class="node-label" x="328.5" y="105.5">J</text>
+<circle class="node labeled-node" cx="269.0" cy="58.0" r="8.2" />
+<text class="node-label" x="269.0" y="61.5">F</text>
+<circle class="node labeled-node" cx="388.0" cy="102.0" r="8.2" />
+<text class="node-label" x="388.0" y="105.5">L</text>
+<circle class="node labeled-node" cx="447.5" cy="102.0" r="8.2" />
+<text class="node-label" x="447.5" y="105.5">M</text>
+<circle class="node labeled-node" cx="417.8" cy="58.0" r="8.2" />
+<text class="node-label" x="417.8" y="61.5">K</text>
+<circle class="node labeled-node" cx="269.0" cy="14.0" r="8.2" />
+<text class="node-label" x="269.0" y="17.5">B</text>
+<circle class="node labeled-node" cx="507.0" cy="14.0" r="8.2" />
+<text class="node-label" x="507.0" y="17.5">N</text>
+</svg><code class="word">UDUUUDUDDUUDUUDDUDDUUDUDDDUD</code><span class="meta">top-level roots: 3</span></td><td class="binary-cell fixed-binary-cell"><svg class="binary" viewBox="0 0 456.4 316.0" role="img" aria-label="labeled first-child next-sibling binary tree">
+<line class="bin-edge-empty" x1="95.9" y1="158.0" x2="81.2" y2="194.0" />
+<line class="bin-edge-empty" x1="95.9" y1="158.0" x2="110.6" y2="194.0" />
+<line class="bin-edge-empty" x1="73.9" y1="122.0" x2="51.8" y2="158.0" />
+<line class="bin-edge-right" x1="73.9" y1="122.0" x2="95.9" y2="158.0" />
+<line class="bin-edge-empty" x1="184.1" y1="230.0" x2="169.4" y2="266.0" />
+<line class="bin-edge-empty" x1="184.1" y1="230.0" x2="198.8" y2="266.0" />
+<line class="bin-edge-empty" x1="242.9" y1="230.0" x2="228.2" y2="266.0" />
+<line class="bin-edge-empty" x1="242.9" y1="230.0" x2="257.6" y2="266.0" />
+<line class="bin-edge-left" x1="213.5" y1="194.0" x2="184.1" y2="230.0" />
+<line class="bin-edge-right" x1="213.5" y1="194.0" x2="242.9" y2="230.0" />
+<line class="bin-edge-empty" x1="176.8" y1="158.0" x2="140.0" y2="194.0" />
+<line class="bin-edge-right" x1="176.8" y1="158.0" x2="213.5" y2="194.0" />
+<line class="bin-edge-empty" x1="331.1" y1="230.0" x2="316.4" y2="266.0" />
+<line class="bin-edge-empty" x1="331.1" y1="230.0" x2="345.8" y2="266.0" />
+<line class="bin-edge-empty" x1="309.1" y1="194.0" x2="287.0" y2="230.0" />
+<line class="bin-edge-right" x1="309.1" y1="194.0" x2="331.1" y2="230.0" />
+<line class="bin-edge-left" x1="342.1" y1="158.0" x2="309.1" y2="194.0" />
+<line class="bin-edge-empty" x1="342.1" y1="158.0" x2="375.2" y2="194.0" />
+<line class="bin-edge-left" x1="259.4" y1="122.0" x2="176.8" y2="158.0" />
+<line class="bin-edge-right" x1="259.4" y1="122.0" x2="342.1" y2="158.0" />
+<line class="bin-edge-left" x1="166.6" y1="86.0" x2="73.9" y2="122.0" />
+<line class="bin-edge-right" x1="166.6" y1="86.0" x2="259.4" y2="122.0" />
+<line class="bin-edge-empty" x1="419.3" y1="86.0" x2="404.6" y2="122.0" />
+<line class="bin-edge-empty" x1="419.3" y1="86.0" x2="434.0" y2="122.0" />
+<line class="bin-edge-left" x1="293.0" y1="50.0" x2="166.6" y2="86.0" />
+<line class="bin-edge-right" x1="293.0" y1="50.0" x2="419.3" y2="86.0" />
+<line class="bin-edge-empty" x1="157.7" y1="14.0" x2="22.4" y2="50.0" />
+<line class="bin-edge-right" x1="157.7" y1="14.0" x2="293.0" y2="50.0" />
+<circle class="bin-empty" cx="22.4" cy="50.0" r="2.6" />
+<circle class="bin-empty" cx="51.8" cy="158.0" r="2.6" />
+<circle class="bin-empty" cx="81.2" cy="194.0" r="2.6" />
+<circle class="bin-empty" cx="110.6" cy="194.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="95.9" cy="158.0" r="8.2" />
+<text class="node-label" x="95.9" y="161.5">E</text>
+<circle class="bin-node labeled-node" cx="73.9" cy="122.0" r="8.2" />
+<text class="node-label" x="73.9" y="125.5">D</text>
+<circle class="bin-empty" cx="140.0" cy="194.0" r="2.6" />
+<circle class="bin-empty" cx="169.4" cy="266.0" r="2.6" />
+<circle class="bin-empty" cx="198.8" cy="266.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="184.1" cy="230.0" r="8.2" />
+<text class="node-label" x="184.1" y="233.5">I</text>
+<circle class="bin-empty" cx="228.2" cy="266.0" r="2.6" />
+<circle class="bin-empty" cx="257.6" cy="266.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="242.9" cy="230.0" r="8.2" />
+<text class="node-label" x="242.9" y="233.5">J</text>
+<circle class="bin-node labeled-node" cx="213.5" cy="194.0" r="8.2" />
+<text class="node-label" x="213.5" y="197.5">H</text>
+<circle class="bin-node labeled-node" cx="176.8" cy="158.0" r="8.2" />
+<text class="node-label" x="176.8" y="161.5">G</text>
+<circle class="bin-empty" cx="287.0" cy="230.0" r="2.6" />
+<circle class="bin-empty" cx="316.4" cy="266.0" r="2.6" />
+<circle class="bin-empty" cx="345.8" cy="266.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="331.1" cy="230.0" r="8.2" />
+<text class="node-label" x="331.1" y="233.5">M</text>
+<circle class="bin-node labeled-node" cx="309.1" cy="194.0" r="8.2" />
+<text class="node-label" x="309.1" y="197.5">L</text>
+<circle class="bin-empty" cx="375.2" cy="194.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="342.1" cy="158.0" r="8.2" />
+<text class="node-label" x="342.1" y="161.5">K</text>
+<circle class="bin-node labeled-node" cx="259.4" cy="122.0" r="8.2" />
+<text class="node-label" x="259.4" y="125.5">F</text>
+<circle class="bin-node labeled-node" cx="166.6" cy="86.0" r="8.2" />
+<text class="node-label" x="166.6" y="89.5">C</text>
+<circle class="bin-empty" cx="404.6" cy="122.0" r="2.6" />
+<circle class="bin-empty" cx="434.0" cy="122.0" r="2.6" />
+<circle class="bin-node labeled-node" cx="419.3" cy="86.0" r="8.2" />
+<text class="node-label" x="419.3" y="89.5">N</text>
+<circle class="bin-node labeled-node" cx="293.0" cy="50.0" r="8.2" />
+<text class="node-label" x="293.0" y="53.5">B</text>
+<circle class="bin-node labeled-node" cx="157.7" cy="14.0" r="8.2" />
+<text class="node-label" x="157.7" y="17.5">A</text>
+</svg><span class="meta">letters match the ordered forest</span></td><td class="fixed-word-cell"><dl class="coord-list"><dt>Dyck word</dt><dd><code>UDUUUDUDDUUDUUDDUDDUUDUDDDUD</code></dd><dt>binary node/null word</dt><dd><code>10111010011011001001101000100</code></dd><dt>Lukasiewicz degrees</dt><dd><code>[0, 3, 2, 0, 0, 3, 0, 1, 0, 0, 2, 0, 0, 0]</code></dd><dt>Lukasiewicz steps</dt><dd><code>[-1, 2, 1, -1, -1, 2, -1, 0, -1, -1, 1, -1, -1, -1]</code></dd></dl><span class="meta">sum of steps: -3</span></td></tr>
       </tbody>
     </table>
   </div>
